@@ -72,6 +72,13 @@ struct AttitudeResponse
     int16_t AngleY;
     int16_t Heading;
     void Unmarshel(const char *payload, uint8_t size);
+
+};
+
+struct MotorResponse
+{
+    int16_t Motors[8];
+    void Unmarshel(const char *payload, uint8_t size);
 };
 
 static uint8_t read8(const char *payload);

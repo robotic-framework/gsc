@@ -36,3 +36,17 @@ void AttitudeResponse::Unmarshel(const char *payload, uint8_t size)
 
     Heading = read16(payload);
 }
+
+void MotorResponse::Unmarshel(const char *payload, uint8_t size)
+{
+    if (size < 16)
+    {
+        return;
+    }
+
+    for (int i = 0; i < size; i += 2)
+    {
+        Motors[i/2] = read16(payload);
+        payload += 2;
+    }
+}

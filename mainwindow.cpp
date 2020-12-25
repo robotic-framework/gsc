@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "../PlaneDashboard/verticalprogress.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -32,7 +33,12 @@ void MainWindow::timerEvent( QTimerEvent *event )
     QMainWindow::timerEvent( event );
 
     serial->SendCommand(MSP_ATTITUDE);
+    serial->SendCommand(MSP_MOTOR);
+
     ui->dashboardADI->update();
+    ui->dashboardPFD->update();
+    ui->dashboardHSI->update();
+    ui->dashboardNAV->update();
 }
 
 void MainWindow::onNewSerialResponse(uint8_t command, const char *payload, uint8_t s)
@@ -44,7 +50,22 @@ void MainWindow::onNewSerialResponse(uint8_t command, const char *payload, uint8
         att.Unmarshel(payload, s);
         ui->dashboardADI->setRoll(att.AngleX / 10.f);
         ui->dashboardADI->setPitch(-att.AngleY / 10.f);
-        qDebug("x: %d, y: %d, heading: %d", att.AngleX, att.AngleY, att.Heading);
+
+        ui->dashboardPFD->setRoll(att.AngleX / 10.f);
+        ui->dashboardPFD->setPitch(-att.AngleY / 10.f);
+        ui->dashboardPFD->setHeading(att.Heading);
+
+        ui->dashboardHSI->setHeading(att.Heading);
+        ui->dashboardNAV->setHeading(att.Heading);
+        break;
+
+    case MSP_MOTOR:
+        MotorResponse motors;
+        motors.Unmarshel(payload, s);
+        ui->motor1->setCurrentValue(motors.Motors[0]);
+        ui->motor2->setCurrentValue(motors.Motors[1]);
+        ui->motor3->setCurrentValue(motors.Motors[2]);
+        ui->motor4->setCurrentValue(motors.Motors[3]);
         break;
     }
 }
