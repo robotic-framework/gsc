@@ -6,270 +6,282 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1280</width>
-    <height>800</height>
+    <width>1307</width>
+    <height>900</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Ground Control System</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout" stretch="10,0,1">
+   <layout class="QVBoxLayout" name="verticalLayout" stretch="0">
     <property name="spacing">
      <number>-1</number>
     </property>
     <item>
-     <layout class="QHBoxLayout" name="layoutDashboard" stretch="2,7,2">
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,1,1">
+     <widget class="QStackedWidget" name="stackedWidget">
+      <widget class="QWidget" name="page1">
+       <layout class="QVBoxLayout" name="verticalLayout_5" stretch="10,2,1">
         <item>
-         <widget class="ADI" name="dashboardADI">
-          <property name="verticalScrollBarPolicy">
-           <enum>Qt::ScrollBarAlwaysOff</enum>
-          </property>
-          <property name="horizontalScrollBarPolicy">
-           <enum>Qt::ScrollBarAlwaysOff</enum>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="HSI" name="dashboardHSI">
-          <property name="verticalScrollBarPolicy">
-           <enum>Qt::ScrollBarAlwaysOff</enum>
-          </property>
-          <property name="horizontalScrollBarPolicy">
-           <enum>Qt::ScrollBarAlwaysOff</enum>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="NAV" name="dashboardNAV">
-          <property name="verticalScrollBarPolicy">
-           <enum>Qt::ScrollBarAlwaysOff</enum>
-          </property>
-          <property name="horizontalScrollBarPolicy">
-           <enum>Qt::ScrollBarAlwaysOff</enum>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <widget class="PFD" name="dashboardPFD">
-        <property name="verticalScrollBarPolicy">
-         <enum>Qt::ScrollBarAlwaysOff</enum>
-        </property>
-        <property name="horizontalScrollBarPolicy">
-         <enum>Qt::ScrollBarAlwaysOff</enum>
-        </property>
-        <property name="sizeAdjustPolicy">
-         <enum>QAbstractScrollArea::AdjustToContents</enum>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1,1,1">
-        <item>
-         <widget class="ALT" name="dashboardALT">
-          <property name="verticalScrollBarPolicy">
-           <enum>Qt::ScrollBarAlwaysOff</enum>
-          </property>
-          <property name="horizontalScrollBarPolicy">
-           <enum>Qt::ScrollBarAlwaysOff</enum>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="VSI" name="dashboardVSI">
-          <property name="verticalScrollBarPolicy">
-           <enum>Qt::ScrollBarAlwaysOff</enum>
-          </property>
-          <property name="horizontalScrollBarPolicy">
-           <enum>Qt::ScrollBarAlwaysOff</enum>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout">
+         <layout class="QHBoxLayout" name="layoutDashboard" stretch="2,6,2,2">
           <item>
-           <widget class="VerticalProgress" name="motor1">
-            <property name="maxValue">
-             <number>2000</number>
+           <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,1,1">
+            <item>
+             <widget class="ADI" name="dashboardADI">
+              <property name="verticalScrollBarPolicy">
+               <enum>Qt::ScrollBarAlwaysOff</enum>
+              </property>
+              <property name="horizontalScrollBarPolicy">
+               <enum>Qt::ScrollBarAlwaysOff</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="HSI" name="dashboardHSI">
+              <property name="verticalScrollBarPolicy">
+               <enum>Qt::ScrollBarAlwaysOff</enum>
+              </property>
+              <property name="horizontalScrollBarPolicy">
+               <enum>Qt::ScrollBarAlwaysOff</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="NAV" name="dashboardNAV">
+              <property name="verticalScrollBarPolicy">
+               <enum>Qt::ScrollBarAlwaysOff</enum>
+              </property>
+              <property name="horizontalScrollBarPolicy">
+               <enum>Qt::ScrollBarAlwaysOff</enum>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="PFD" name="dashboardPFD">
+            <property name="verticalScrollBarPolicy">
+             <enum>Qt::ScrollBarAlwaysOff</enum>
             </property>
-            <property name="currentValue">
-             <number>0</number>
+            <property name="horizontalScrollBarPolicy">
+             <enum>Qt::ScrollBarAlwaysOff</enum>
             </property>
-            <property name="borderWidth">
-             <number>1</number>
-            </property>
-            <property name="borderRadius">
-             <number>0</number>
-            </property>
-            <property name="borderColorStart">
-             <color>
-              <red>0</red>
-              <green>255</green>
-              <blue>255</blue>
-             </color>
-            </property>
-            <property name="borderColorEnd">
-             <color>
-              <red>0</red>
-              <green>0</green>
-              <blue>0</blue>
-             </color>
+            <property name="sizeAdjustPolicy">
+             <enum>QAbstractScrollArea::AdjustToContents</enum>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="VerticalProgress" name="motor2">
-            <property name="maxValue">
-             <number>2000</number>
-            </property>
-            <property name="currentValue">
-             <number>0</number>
-            </property>
-            <property name="borderWidth">
-             <number>1</number>
-            </property>
-            <property name="borderRadius">
-             <number>0</number>
-            </property>
-            <property name="borderColorStart">
-             <color>
-              <red>0</red>
-              <green>255</green>
-              <blue>255</blue>
-             </color>
-            </property>
-           </widget>
+           <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1,1,1">
+            <item>
+             <widget class="ALT" name="dashboardALT">
+              <property name="verticalScrollBarPolicy">
+               <enum>Qt::ScrollBarAlwaysOff</enum>
+              </property>
+              <property name="horizontalScrollBarPolicy">
+               <enum>Qt::ScrollBarAlwaysOff</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="VSI" name="dashboardVSI">
+              <property name="verticalScrollBarPolicy">
+               <enum>Qt::ScrollBarAlwaysOff</enum>
+              </property>
+              <property name="horizontalScrollBarPolicy">
+               <enum>Qt::ScrollBarAlwaysOff</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout">
+              <item>
+               <widget class="VerticalProgress" name="motor1">
+                <property name="maxValue">
+                 <number>2000</number>
+                </property>
+                <property name="currentValue">
+                 <number>0</number>
+                </property>
+                <property name="borderWidth">
+                 <number>1</number>
+                </property>
+                <property name="borderRadius">
+                 <number>0</number>
+                </property>
+                <property name="borderColorStart">
+                 <color>
+                  <red>0</red>
+                  <green>255</green>
+                  <blue>255</blue>
+                 </color>
+                </property>
+                <property name="borderColorEnd">
+                 <color>
+                  <red>0</red>
+                  <green>0</green>
+                  <blue>0</blue>
+                 </color>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="VerticalProgress" name="motor2">
+                <property name="maxValue">
+                 <number>2000</number>
+                </property>
+                <property name="currentValue">
+                 <number>0</number>
+                </property>
+                <property name="borderWidth">
+                 <number>1</number>
+                </property>
+                <property name="borderRadius">
+                 <number>0</number>
+                </property>
+                <property name="borderColorStart">
+                 <color>
+                  <red>0</red>
+                  <green>255</green>
+                  <blue>255</blue>
+                 </color>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="VerticalProgress" name="motor3">
+                <property name="maxValue">
+                 <number>2000</number>
+                </property>
+                <property name="currentValue">
+                 <number>0</number>
+                </property>
+                <property name="borderWidth">
+                 <number>1</number>
+                </property>
+                <property name="borderRadius">
+                 <number>0</number>
+                </property>
+                <property name="borderColorStart">
+                 <color>
+                  <red>0</red>
+                  <green>255</green>
+                  <blue>255</blue>
+                 </color>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="VerticalProgress" name="motor4">
+                <property name="maxValue">
+                 <number>2000</number>
+                </property>
+                <property name="currentValue">
+                 <number>0</number>
+                </property>
+                <property name="borderWidth">
+                 <number>1</number>
+                </property>
+                <property name="borderRadius">
+                 <number>0</number>
+                </property>
+                <property name="borderColorStart">
+                 <color>
+                  <red>0</red>
+                  <green>255</green>
+                  <blue>255</blue>
+                 </color>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
           </item>
           <item>
-           <widget class="VerticalProgress" name="motor3">
-            <property name="maxValue">
-             <number>2000</number>
-            </property>
-            <property name="currentValue">
+           <layout class="QVBoxLayout" name="verticalLayout_4"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="layoutData"/>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="layoutAction" stretch="4,6">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetFixedSize</enum>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <property name="rightMargin">
              <number>0</number>
             </property>
-            <property name="borderWidth">
-             <number>1</number>
-            </property>
-            <property name="borderRadius">
-             <number>0</number>
-            </property>
-            <property name="borderColorStart">
-             <color>
-              <red>0</red>
-              <green>255</green>
-              <blue>255</blue>
-             </color>
-            </property>
-           </widget>
+            <item>
+             <widget class="QPushButton" name="pushButton">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>串口设置</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton_2">
+              <property name="text">
+               <string>连接</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton_3">
+              <property name="text">
+               <string>断开</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item>
-           <widget class="VerticalProgress" name="motor4">
-            <property name="maxValue">
-             <number>2000</number>
-            </property>
-            <property name="currentValue">
+           <layout class="QGridLayout" name="gridLayout_2">
+            <property name="rightMargin">
              <number>0</number>
             </property>
-            <property name="borderWidth">
-             <number>1</number>
-            </property>
-            <property name="borderRadius">
-             <number>0</number>
-            </property>
-            <property name="borderColorStart">
-             <color>
-              <red>0</red>
-              <green>255</green>
-              <blue>255</blue>
-             </color>
-            </property>
-           </widget>
+            <item row="0" column="0">
+             <widget class="QPushButton" name="pushButton_4">
+              <property name="text">
+               <string>IMU校准</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QPushButton" name="pushButton_5">
+              <property name="text">
+               <string>启动无人机</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QPushButton" name="pushButton_6">
+              <property name="text">
+               <string>停止无人机</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </item>
        </layout>
-      </item>
-     </layout>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="layoutData"/>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="layoutAction" stretch="4,6">
-      <property name="sizeConstraint">
-       <enum>QLayout::SetFixedSize</enum>
-      </property>
-      <property name="rightMargin">
-       <number>0</number>
-      </property>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <item>
-         <widget class="QPushButton" name="pushButton">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>串口设置</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_2">
-          <property name="text">
-           <string>连接</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_3">
-          <property name="text">
-           <string>断开</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QGridLayout" name="gridLayout_2">
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <item row="0" column="0">
-         <widget class="QPushButton" name="pushButton_4">
-          <property name="text">
-           <string>IMU校准</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QPushButton" name="pushButton_5">
-          <property name="text">
-           <string>启动无人机</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="2">
-         <widget class="QPushButton" name="pushButton_6">
-          <property name="text">
-           <string>停止无人机</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-     </layout>
+      </widget>
+      <widget class="QWidget" name="page2"/>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -278,8 +290,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1280</width>
-     <height>22</height>
+     <width>1307</width>
+     <height>24</height>
     </rect>
    </property>
   </widget>

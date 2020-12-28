@@ -35,6 +35,10 @@ void MainWindow::timerEvent( QTimerEvent *event )
     serial->SendCommand(MSP_ATTITUDE);
     serial->SendCommand(MSP_MOTOR);
 
+    ui->motor1->update();
+    ui->motor2->update();
+    ui->motor3->update();
+    ui->motor4->update();
     ui->dashboardADI->update();
     ui->dashboardPFD->update();
     ui->dashboardHSI->update();
@@ -85,7 +89,7 @@ void MainWindow::on_pushButton_2_clicked()
     {
         ui->statusbar->showMessage("连接成功", 2000);
         connect(serial, SIGNAL(newResponse(uint8_t, const char*, uint8_t)), this, SLOT(onNewSerialResponse(uint8_t, const char*, uint8_t)));
-        m_serialTimerId = startTimer(100);
+        m_serialTimerId = startTimer(50);
     }
     else
     {

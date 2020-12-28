@@ -1,6 +1,7 @@
 QT       += core gui
 QT       += serialport
-QT += svg
+QT       += svg
+QT       += webenginewidgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
