@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GCS</title>
+</head>
+
+<body>
+    <div id="container"></div>
+</body>
+
+</html>
+<script type="text/javascript"
+    src="https://webapi.amap.com/maps?v=1.4.15&key=25b414ba8468fcf3258d841248c6e017"></script>
+<style type="text/css">
+    html, body {
+        height: 100%;
+        margin: 0;
+    }
+
+    #container {
+        height: 100%;
+    }
+</style>
+<script type="text/javascript">
+    function addMarker(cx, cy) {
+        // 容器坐标
+        var point = new AMap.Pixel(cx, cy);
+        // 转换经纬度
+        var lnglat = map.containerToLngLat(point);
+        // 标点
+        var marker = new AMap.Marker({
+            position: [lnglat.getLng(), lnglat.getLat()]
+        });
+        map.add(marker);
+    }
+
+    var map = new AMap.Map('container', {
+        zoom: 13,
+        resizeEnable: true
+    });
+    // //实时路况图层
+    // var trafficLayer = new AMap.TileLayer.Traffic({
+    //     zIndex: 10
+    // });
+    // map.add(trafficLayer);//添加图层到地图
+</script>
