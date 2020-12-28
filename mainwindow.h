@@ -26,12 +26,15 @@ protected:
 
 private slots:
     void onNewSerialResponse(uint8_t command, const char *payload, uint8_t s);
+    void onWebviewLoadFinished(bool f);
     void on_pushButton_clicked();
     void on_pushButton_2_clicked();
     void on_pushButton_3_clicked();
     void on_pushButton_4_clicked();
     void on_pushButton_5_clicked();
     void on_pushButton_6_clicked();
+    void on_actionDashboard_triggered();
+    void on_actionPlanner_triggered();
 
 private:
     Ui::MainWindow *ui;

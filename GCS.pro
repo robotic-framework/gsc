@@ -12,7 +12,7 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    ../PlaneDashboard/verticalprogress.cpp \
+#    ../PlaneDashboard/verticalprogress.cpp \
     main.cpp \
     mainwindow.cpp \
     optiondialog.cpp \
@@ -20,7 +20,7 @@ SOURCES += \
     serial.cpp
 
 HEADERS += \
-    ../PlaneDashboard/verticalprogress.h \
+#    ../PlaneDashboard/verticalprogress.h \
     protocol.h \
     serial.h \
     mainwindow.h \
@@ -44,3 +44,6 @@ else:unix: LIBS += -L$$PWD/../build-PlaneDashboard-Desktop_Qt_5_15_2_clang_64bit
 
 INCLUDEPATH += $$PWD/../PlaneDashboard
 DEPENDPATH += $$PWD/../PlaneDashboard
+
+RESOURCES += \
+    resources.qrc

@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "../PlaneDashboard/verticalprogress.h"
+#include <QtWebEngineWidgets>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -20,6 +20,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->dashboardNAV->horizontalScrollBar()->setEnabled(false);
     ui->dashboardVSI->verticalScrollBar()->setEnabled(false);
     ui->dashboardVSI->horizontalScrollBar()->setEnabled(false);
+
+    connect(ui->webView, SIGNAL(loadFinished(bool)), this, SLOT(onWebviewLoadFinished(bool)));
+
+    QUrl url(QString("qrc://resources/webview/index.html"));
+    ui->webView->load(url);
     serial = Serial::instance();
 }
 
@@ -74,6 +79,11 @@ void MainWindow::onNewSerialResponse(uint8_t command, const char *payload, uint8
     }
 }
 
+void MainWindow::onWebviewLoadFinished(bool f)
+{
+    qDebug("load finished");
+}
+
 void MainWindow::on_pushButton_clicked()
 {
     if(winOption == nullptr)
@@ -121,4 +131,14 @@ void MainWindow::on_pushButton_5_clicked()
 void MainWindow::on_pushButton_6_clicked()
 {
     serial->SendCommand(MSP_DIS_ARM);
+}
+
+void MainWindow::on_actionDashboard_triggered()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+}
+
+void MainWindow::on_actionPlanner_triggered()
+{
+    ui->stackedWidget->setCurrentIndex(1);
 }
