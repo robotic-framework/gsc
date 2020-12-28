@@ -22,9 +22,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->dashboardVSI->horizontalScrollBar()->setEnabled(false);
 
     connect(ui->webView, SIGNAL(loadFinished(bool)), this, SLOT(onWebviewLoadFinished(bool)));
-
     QUrl url(QString("qrc://resources/webview/index.html"));
     ui->webView->load(url);
+
     serial = Serial::instance();
 }
 

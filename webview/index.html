@@ -13,7 +13,7 @@
 
 </html>
 <script type="text/javascript"
-    src="https://webapi.amap.com/maps?v=1.4.15&key=25b414ba8468fcf3258d841248c6e017"></script>
+    src="https://webapi.amap.com/maps?v=1.4.15&key=25b414ba8468fcf3258d841248c6e017&plugin=AMap.Scale,AMap.OverView,AMap.ToolBar"></script>
 <style type="text/css">
     html, body {
         height: 100%;
@@ -46,4 +46,17 @@
     //     zIndex: 10
     // });
     // map.add(trafficLayer);//添加图层到地图
+
+    // 添加控件
+    var scale = new AMap.Scale();
+    var toolBar = new AMap.ToolBar({
+        aotuPosition: true
+    });
+    var overview = new AMap.OverView({
+        isOpen: true
+    });
+    map.addControl(scale);
+    map.addControl(toolBar);
+    map.addControl(overview);
+    
 </script>
