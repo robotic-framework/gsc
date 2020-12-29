@@ -14,8 +14,10 @@
 </html>
 <script type="text/javascript"
     src="https://webapi.amap.com/maps?v=1.4.15&key=25b414ba8468fcf3258d841248c6e017&plugin=AMap.Scale,AMap.OverView,AMap.ToolBar"></script>
+<script type="text/javascript" src="qrc:///qtwebchannel/qwebchannel.js"></script>
 <style type="text/css">
-    html, body {
+    html,
+    body {
         height: 100%;
         margin: 0;
     }
@@ -25,21 +27,89 @@
     }
 </style>
 <script type="text/javascript">
+    var markerMap = {};
+    var polyMarker;
+
+    function generateID() {
+        return Math.random().toString(36).slice(-8);
+    }
+
     function addMarker(cx, cy) {
         // 容器坐标
         var point = new AMap.Pixel(cx, cy);
         // 转换经纬度
         var lnglat = map.containerToLngLat(point);
+        return addMarkerByLnglat(lnglat.getLng(), lnglat.getLat());
+    }
+
+    function addMarkerByLnglat(lng, lat) {
         // 标点
         var marker = new AMap.Marker({
-            position: [lnglat.getLng(), lnglat.getLat()]
+            position: [lng, lat]
         });
         map.add(marker);
+        return marker
     }
+
+    function addPolylines(lng, lat) {
+        if (!polyMarker) {
+            polyMarker = new AMap.Polyline({
+                path: [],
+                strokeWeight: 3,
+                strokeColor: '#FF0000',
+                lineJoin: 'round',
+                lineCap: 'round'
+            });
+            map.add(polyMarker);
+        }
+        var polyPath = polyMarker.getPath();
+        polyPath.push(new AMap.LngLat(lng, lat));
+        polyMarker.setPath(polyPath);
+    }
+
+    function removePolylineByIndex(index) {
+        if (!polyMarker) {
+            return;
+        }
+
+        var polyPath = polyMarker.getPath();
+        polyPath.splice(index, 1);
+        polyMarker.setPath(polyPath);
+    }
+
+    function removeMarkerByID(id, index) {
+        var marker = markerMap[id];
+        if (marker !== undefined) {
+            map.remove(marker);
+            markerMap[id] = null;
+        }
+    }
+
+    function clearMarkers() {
+        map.remove(polyMarker);
+        polyMarker = null;
+
+        for (const key in markerMap) {
+            if (Object.hasOwnProperty.call(markerMap, key)) {
+                let marker = markerMap[key];
+                map.remove(marker);
+            }
+        }
+    }
+</script>
+<script type="text/javascript">
+    new QWebChannel(qt.webChannelTransport,
+        function (channel) {
+            window.bridge = channel.objects.bridge;
+            window.bridge.onMarkerRemoved.connect(removeMarkerByID);
+            window.bridge.onMarkerClear.connect(clearMarkers);
+        }
+    );
 
     var map = new AMap.Map('container', {
         zoom: 13,
-        resizeEnable: true
+        resizeEnable: true,
+        doubleClickZoom: false
     });
     // //实时路况图层
     // var trafficLayer = new AMap.TileLayer.Traffic({
@@ -58,5 +128,15 @@
     map.addControl(scale);
     map.addControl(toolBar);
     map.addControl(overview);
-    
+
+    map.on('dblclick', function (evt) {
+        var lnglat = evt.lnglat;
+        addPolylines(lnglat.getLng(), lnglat.getLat());
+        var marker = addMarkerByLnglat(lnglat.getLng(), lnglat.getLat());
+
+        var id = generateID();
+        markerMap[id] = marker;
+        window.bridge.addMarker(id, lnglat.getLng(), lnglat.getLat());
+    });
+
 </script>

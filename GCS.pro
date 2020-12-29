@@ -1,7 +1,7 @@
 QT       += core gui
 QT       += serialport
 QT       += svg
-QT       += webenginewidgets
+QT       += webenginewidgets webchannel
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -17,14 +17,16 @@ SOURCES += \
     mainwindow.cpp \
     optiondialog.cpp \
     protocol.cpp \
-    serial.cpp
+    serial.cpp \
+    webviewbridge.cpp
 
 HEADERS += \
 #    ../PlaneDashboard/verticalprogress.h \
     protocol.h \
     serial.h \
     mainwindow.h \
-    optiondialog.h
+    optiondialog.h \
+    webviewbridge.h
 
 FORMS += \
     mainwindow.ui \

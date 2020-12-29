@@ -6,6 +6,7 @@
 #include "optiondialog.h"
 #include "serial.h"
 #include "protocol.h"
+#include "webviewbridge.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -35,10 +36,13 @@ private slots:
     void on_pushButton_6_clicked();
     void on_actionDashboard_triggered();
     void on_actionPlanner_triggered();
+    void on_pushButton_7_clicked();
+    void on_pushButton_8_clicked();
 
 private:
     Ui::MainWindow *ui;
     Serial *serial;
     int m_serialTimerId;
+    WebviewBridge *webviewBridge;
 };
 #endif // MAINWINDOW_H

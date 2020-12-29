@@ -1,6 +1,7 @@
+#include <QtWebEngineWidgets>
+#include <QWebChannel>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QtWebEngineWidgets>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -24,6 +25,11 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->webView, SIGNAL(loadFinished(bool)), this, SLOT(onWebviewLoadFinished(bool)));
     QUrl url(QString("qrc://resources/webview/index.html"));
     ui->webView->load(url);
+
+    QWebChannel *webviewChan = new QWebChannel(this);
+    webviewBridge = new WebviewBridge(ui, this);
+    webviewChan->registerObject("bridge", webviewBridge);
+    ui->webView->page()->setWebChannel(webviewChan);
 
     serial = Serial::instance();
 }
@@ -81,7 +87,8 @@ void MainWindow::onNewSerialResponse(uint8_t command, const char *payload, uint8
 
 void MainWindow::onWebviewLoadFinished(bool f)
 {
-    qDebug("load finished");
+//    QString cmd = QString("addMarker(%1, %2)").arg(QString::number(50.f, 'f', 6)).arg(QString::number(50.f, 'f', 6));
+//    ui->webView->page()->runJavaScript(cmd);
 }
 
 void MainWindow::on_pushButton_clicked()
@@ -141,4 +148,17 @@ void MainWindow::on_actionDashboard_triggered()
 void MainWindow::on_actionPlanner_triggered()
 {
     ui->stackedWidget->setCurrentIndex(1);
+}
+
+void MainWindow::on_pushButton_7_clicked()
+{
+    QStringList tmp = ui->listWidget->currentItem()->text().split(":");
+    QString id = tmp[0];
+    webviewBridge->removeMarkerFromApp(id, ui->listWidget->currentRow());
+    ui->listWidget->takeItem(ui->listWidget->currentRow());
+}
+
+void MainWindow::on_pushButton_8_clicked()
+{
+    webviewBridge->clearMarker();
 }
