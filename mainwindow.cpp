@@ -160,5 +160,6 @@ void MainWindow::on_pushButton_7_clicked()
 
 void MainWindow::on_pushButton_8_clicked()
 {
+    ui->listWidget->clear();
     webviewBridge->clearMarker();
 }
