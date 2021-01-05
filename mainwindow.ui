@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1307</width>
+    <width>1205</width>
     <height>900</height>
    </rect>
   </property>
@@ -21,7 +21,7 @@
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
       <widget class="QWidget" name="page1">
-       <layout class="QVBoxLayout" name="verticalLayout_5" stretch="10,2,1">
+       <layout class="QVBoxLayout" name="verticalLayout_5" stretch="10,3,1">
         <item>
          <layout class="QHBoxLayout" name="layoutDashboard" stretch="2,6,2,2">
           <item>
@@ -199,12 +199,297 @@
            </layout>
           </item>
           <item>
-           <layout class="QVBoxLayout" name="verticalLayout_4"/>
+           <layout class="QVBoxLayout" name="verticalLayout_4" stretch="1,2,2">
+            <item>
+             <layout class="QGridLayout" name="gridLayout" rowstretch="1,1" columnstretch="1,1,1">
+              <item row="1" column="2">
+               <widget class="Switcher" name="swiGPS">
+                <property name="text">
+                 <string>GPS</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="Switcher" name="swiAcc">
+                <property name="text">
+                 <string>Acc</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="2">
+               <widget class="Switcher" name="swiMag">
+                <property name="text">
+                 <string>Mag</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="Switcher" name="swiBaro">
+                <property name="text">
+                 <string>Baro</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="Switcher" name="swiGyro">
+                <property name="text">
+                 <string>Gyro</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="Switcher" name="swiSonar">
+                <property name="text">
+                 <string>Sonar</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_9">
+              <property name="spacing">
+               <number>-1</number>
+              </property>
+              <item>
+               <widget class="QWidget" name="widget" native="true"/>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_8">
+              <item>
+               <widget class="QWidget" name="widget_2" native="true"/>
+              </item>
+             </layout>
+            </item>
+           </layout>
           </item>
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="layoutData"/>
+         <layout class="QHBoxLayout" name="layoutData" stretch="1,1,1,1">
+          <item>
+           <layout class="QFormLayout" name="formLayout">
+            <property name="sizeConstraint">
+             <enum>QLayout::SetFixedSize</enum>
+            </property>
+            <property name="fieldGrowthPolicy">
+             <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+            </property>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_3">
+              <property name="text">
+               <string>CycleTime</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLabel" name="lblCycleTime">
+              <property name="text">
+               <string>0</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_4">
+              <property name="text">
+               <string>I2CError</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLabel" name="lblI2CError">
+              <property name="text">
+               <string>0</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QFormLayout" name="formLayout_4">
+            <property name="sizeConstraint">
+             <enum>QLayout::SetFixedSize</enum>
+            </property>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_5">
+              <property name="text">
+               <string>Acc_X</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_6">
+              <property name="text">
+               <string>Acc_Y</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_7">
+              <property name="text">
+               <string>Acc_Z</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLabel" name="lblAccX">
+              <property name="text">
+               <string>0</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLabel" name="lblAccY">
+              <property name="text">
+               <string>0</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLabel" name="lblAccZ">
+              <property name="text">
+               <string>0</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_8">
+              <property name="text">
+               <string>Gyro_X</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QLabel" name="lblGyroX">
+              <property name="text">
+               <string>0</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="label_10">
+              <property name="text">
+               <string>Gyro_Y</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QLabel" name="lblGyroY">
+              <property name="text">
+               <string>0</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0">
+             <widget class="QLabel" name="label_12">
+              <property name="text">
+               <string>Gyro_Z</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <widget class="QLabel" name="lblGyroZ">
+              <property name="text">
+               <string>0</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QFormLayout" name="formLayout_5">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_9">
+              <property name="text">
+               <string>Mag_X</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLabel" name="lblMagX">
+              <property name="text">
+               <string>0</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_13">
+              <property name="text">
+               <string>Mag_Y</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLabel" name="lblMagY">
+              <property name="text">
+               <string>0</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_15">
+              <property name="text">
+               <string>Mag_Z</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLabel" name="lblMagZ">
+              <property name="text">
+               <string>0</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_11">
+              <property name="text">
+               <string>Baro_T</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QLabel" name="lblBaroT">
+              <property name="text">
+               <string>0</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="label_16">
+              <property name="text">
+               <string>Baro_P</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QLabel" name="lblBaroP">
+              <property name="text">
+               <string>0</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0">
+             <widget class="QLabel" name="label_14">
+              <property name="text">
+               <string>Alt</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <widget class="QLabel" name="lblAlt">
+              <property name="text">
+               <string>0</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QFormLayout" name="formLayout_3"/>
+          </item>
+         </layout>
         </item>
         <item>
          <layout class="QHBoxLayout" name="layoutAction" stretch="4,6">
@@ -298,6 +583,36 @@
            <widget class="QListWidget" name="listWidget"/>
           </item>
           <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="1,2">
+            <item>
+             <widget class="QLabel" name="label_2">
+              <property name="text">
+               <string>总路程（米）</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLCDNumber" name="lcdDistance">
+              <property name="smallDecimalPoint">
+               <bool>false</bool>
+              </property>
+              <property name="digitCount">
+               <number>10</number>
+              </property>
+              <property name="segmentStyle">
+               <enum>QLCDNumber::Flat</enum>
+              </property>
+              <property name="value" stdset="0">
+               <double>0.000000000000000</double>
+              </property>
+              <property name="intValue" stdset="0">
+               <number>0</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
            <widget class="QPushButton" name="pushButton_7">
             <property name="text">
              <string>删除选中标点</string>
@@ -324,7 +639,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1307</width>
+     <width>1205</width>
      <height>22</height>
     </rect>
    </property>
@@ -392,6 +707,11 @@
    <class>VerticalProgress</class>
    <extends>QWidget</extends>
    <header>verticalprogress.h</header>
+  </customwidget>
+  <customwidget>
+   <class>Switcher</class>
+   <extends>QWidget</extends>
+   <header>switcher.h</header>
   </customwidget>
   <customwidget>
    <class>QWebEngineView</class>

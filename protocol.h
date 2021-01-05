@@ -60,11 +60,36 @@
 #define MSP_BIND 241         //in message          no param
 #define MSP_ARM 242          //in message
 #define MSP_DIS_ARM 243      //in message
+#define MSP_RAW_BARO 244     //out message
 
 #define MSP_EEPROM_WRITE 250 //in message          no param
 
 #define MSP_DEBUGMSG 253 //out message         debug string buffer
 #define MSP_DEBUG 254    //out message         debug1,debug2,debug3,debug4
+
+struct StatusResponse
+{
+    uint16_t CycleTime, I2CErrorCount;
+    bool SensorAcc, SensorGyro, SensorMag, SensorBaro, SensorSonar, SensorGPS;
+    uint32_t Flag;
+    uint8_t Set;
+    void Unmarshel(const char *payload, uint8_t size);
+};
+
+struct RawIMUResponse
+{
+    int16_t Acc[3];
+    int16_t Gyro[3];
+    int16_t Mag[3];
+    void Unmarshel(const char *payload, uint8_t size);
+};
+
+struct RawBaroResponse
+{
+    int16_t CT;
+    int32_t CP;
+    void Unmarshel(const char *payload, uint8_t size);
+};
 
 struct AttitudeResponse
 {
@@ -73,6 +98,13 @@ struct AttitudeResponse
     int16_t Heading;
     void Unmarshel(const char *payload, uint8_t size);
 
+};
+
+struct AltitudeResponse
+{
+    int32_t Alt;
+    int16_t Vario;
+    void Unmarshel(const char *payload, uint8_t size);
 };
 
 struct MotorResponse

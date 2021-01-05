@@ -84,6 +84,7 @@
             markerMap[id] = null;
         }
         removePolylineByIndex(index);
+        window.bridge.setDistance(polyMarker.getLength());
     }
 
     function clearMarkers() {
@@ -96,6 +97,8 @@
                 map.remove(marker);
             }
         }
+
+        window.bridge.setDistance(0);
     }
 </script>
 <script type="text/javascript">
@@ -138,6 +141,7 @@
         var id = generateID();
         markerMap[id] = marker;
         window.bridge.addMarker(id, lnglat.getLng(), lnglat.getLat());
+        window.bridge.setDistance(polyMarker.getLength());
     });
 
 </script>

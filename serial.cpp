@@ -129,8 +129,8 @@ bool Serial::Connect()
     if (io->open(QIODevice::ReadWrite))
     {
         connect(io, SIGNAL(readyRead()), this, SLOT(onRead()));
-        // 连接后等待10秒变为可写状态
-        timerId = startTimer(10000);
+        // 连接后等待5秒变为可写状态
+        timerId = startTimer(5000);
         return true;
     }
 

@@ -21,6 +21,70 @@ static uint32_t read32(const char *payload)
     return c;
 }
 
+void StatusResponse::Unmarshel(const char *payload, uint8_t size)
+{
+    if (size < 11)
+    {
+        return;
+    }
+
+    CycleTime = read16(payload);
+    payload += 2;
+
+    I2CErrorCount = read16(payload);
+    payload += 2;
+
+    uint16_t sensor = read16(payload);
+    SensorAcc = sensor & 0x01;
+    SensorBaro = sensor & (1 << 1);
+    SensorMag = sensor & (1 << 2);
+    SensorGPS = sensor & (1 << 3);
+    SensorSonar = sensor & (1 << 4);
+    SensorGyro = sensor & (1 << 5);
+    payload += 2;
+
+    Flag = read32(payload);
+    payload += 4;
+
+    Set = read8(payload);
+}
+
+void RawIMUResponse::Unmarshel(const char *payload, uint8_t size)
+{
+    if (size < 18)
+    {
+        return;
+    }
+
+    for (int i = 0; i < 6; i += 2)
+    {
+        Acc[i/2] = read16(payload);
+        payload += 2;
+    }
+    for (int i = 0; i < 6; i += 2)
+    {
+        Gyro[i/2] = read16(payload);
+        payload += 2;
+    }
+    for (int i = 0; i < 6; i += 2)
+    {
+        Mag[i/2] = read16(payload);
+        payload += 2;
+    }
+}
+
+void RawBaroResponse::Unmarshel(const char *payload, uint8_t size)
+{
+    if (size < 6)
+    {
+        return;
+    }
+
+    CT = read16(payload);
+    payload += 2;
+    CP = read32(payload);
+}
+
 void AttitudeResponse::Unmarshel(const char *payload, uint8_t size)
 {
     if (size < 6)
@@ -35,6 +99,18 @@ void AttitudeResponse::Unmarshel(const char *payload, uint8_t size)
     payload += 2;
 
     Heading = read16(payload);
+}
+
+void AltitudeResponse::Unmarshel(const char *payload, uint8_t size)
+{
+    if (size < 6)
+    {
+        return;
+    }
+
+    Alt = read32(payload);
+    payload += 4;
+    Vario = read16(payload);
 }
 
 void MotorResponse::Unmarshel(const char *payload, uint8_t size)

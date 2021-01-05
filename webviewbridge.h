@@ -12,6 +12,7 @@ public:
 
 public slots:
     void addMarker(QString id, qreal lng, qreal lat);
+    void setDistance(qreal distance);
     void removeMarker(QString id);
 
 public:
