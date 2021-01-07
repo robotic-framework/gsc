@@ -175,6 +175,8 @@ bool Serial::Connected()
 
 void Serial::_write()
 {
+    qDebug("serial send: %s", byteArrayToHexStr(txBuffer, txBufferHead).toStdString().c_str());
+
     io->write(txBuffer, txBufferHead);
     txBufferHead = 0;
 }
@@ -291,4 +293,17 @@ void Serial::onRead()
         }
         ptr++;
     }
+}
+
+static QString byteArrayToHexStr(const char *payload, int size)
+{
+    QByteArray data = QByteArray::fromRawData(payload, size);
+    QString temp = "";
+    QString hex = data.toHex();
+
+    for (int i = 0; i < hex.length(); i = i + 2) {
+        temp += hex.mid(i, 2) + " ";
+    }
+
+    return temp.trimmed().toUpper();
 }

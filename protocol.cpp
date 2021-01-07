@@ -126,3 +126,8 @@ void MotorResponse::Unmarshel(const char *payload, uint8_t size)
         payload += 2;
     }
 }
+
+int32_t UnmarshelAltHold(const char *payload)
+{
+    return read32(payload);
+}

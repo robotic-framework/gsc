@@ -37,6 +37,8 @@ private slots:
     void on_actionPlanner_triggered();
     void on_pushButton_7_clicked();
     void on_pushButton_8_clicked();
+    void on_chkAltHold_stateChanged(int arg1);
+    void on_horizontalSlider_sliderMoved(int position);
 
 private:
     Ui::MainWindow *ui;

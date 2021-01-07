@@ -12,6 +12,8 @@
 
 #define MSP_PRIVATE 1 //in+out message      to be used for a generic framework : MSP + function code (LIST/GET/SET) + data. no code yet
 
+#define MSP_TEST_ALTHOLD 10
+
 #define MSP_IDENT 100      //out message         multitype + multiwii version + protocol version + capability variable
 #define MSP_STATUS 101     //out message         cycletime & errors_count & sensor present & box activation & current setting number
 #define MSP_RAW_IMU 102    //out message         9 DOF
@@ -61,6 +63,8 @@
 #define MSP_ARM 242          //in message
 #define MSP_DIS_ARM 243      //in message
 #define MSP_RAW_BARO 244     //out message
+#define MSP_ALT_HOLD 245     // in message
+#define MSP_ALT_UNLOCK 246   // in message
 
 #define MSP_EEPROM_WRITE 250 //in message          no param
 
@@ -112,6 +116,8 @@ struct MotorResponse
     int16_t Motors[8];
     void Unmarshel(const char *payload, uint8_t size);
 };
+
+int32_t UnmarshelAltHold(const char *payload);
 
 static uint8_t read8(const char *payload);
 static uint16_t read16(const char *payload);

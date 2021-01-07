@@ -87,4 +87,6 @@ signals:
     void newResponse(uint8_t, const char*, uint8_t);
 };
 
+static QString byteArrayToHexStr(const char *payload, int size);
+
 #endif // SERIAL_H

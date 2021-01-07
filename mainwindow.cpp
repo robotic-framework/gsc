@@ -113,12 +113,17 @@ void MainWindow::onNewSerialResponse(uint8_t command, const char *payload, uint8
 
         ui->dashboardHSI->setHeading(att.Heading);
         ui->dashboardNAV->setHeading(att.Heading);
+
+        ui->lblRoll->setText(QString::number(att.AngleX / 10.f));
+        ui->lblPitch->setText(QString::number(att.AngleY / 10.f));
+        ui->lblYaw->setText(QString::number(att.Heading));
         break;
 
     case MSP_ALTITUDE:
         AltitudeResponse alt;
         alt.Unmarshel(payload, s);
         ui->lblAlt->setText(QString::number(alt.Alt / 100.f));
+        ui->lblVario->setText(QString::number(alt.Vario));
         break;
 
     case MSP_MOTOR:
@@ -128,6 +133,11 @@ void MainWindow::onNewSerialResponse(uint8_t command, const char *payload, uint8
         ui->motor2->setCurrentValue(motors.Motors[1]);
         ui->motor3->setCurrentValue(motors.Motors[2]);
         ui->motor4->setCurrentValue(motors.Motors[3]);
+        break;
+
+    case MSP_ALT_HOLD:
+        int32_t altHold = UnmarshelAltHold(payload);
+        ui->chkAltHold->setText(ui->chkAltHold->text().append(QString("[ %1cm ]").arg(altHold)));
         break;
     }
 }
@@ -169,6 +179,7 @@ void MainWindow::on_pushButton_3_clicked()
 void MainWindow::on_pushButton_4_clicked()
 {
     serial->SendCommand(MSP_ACC_CALIBRATION);
+    serial->SendCommand(MSP_MAG_CALIBRATION);
 }
 
 void MainWindow::on_pushButton_5_clicked()
@@ -203,4 +214,24 @@ void MainWindow::on_pushButton_8_clicked()
 {
     ui->listWidget->clear();
     webviewBridge->clearMarker();
+}
+
+void MainWindow::on_chkAltHold_stateChanged(int arg1)
+{
+    if (arg1)
+    {
+        serial->SendCommand(MSP_ALT_HOLD);
+    }
+    else
+    {
+        ui->chkAltHold->setText("AltHold");
+        serial->SendCommand(MSP_ALT_UNLOCK);
+    }
+}
+
+void MainWindow::on_horizontalSlider_sliderMoved(int position)
+{
+    uint16_t p = position;
+    qDebug("MSP_TEST_ALTHOLD alt: %d", p);
+    serial->SendCommand(MSP_TEST_ALTHOLD, (char *)&p, 2);
 }
