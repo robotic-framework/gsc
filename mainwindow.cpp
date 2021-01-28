@@ -23,7 +23,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->dashboardVSI->horizontalScrollBar()->setEnabled(false);
     ui->lcdDistance->setStyleSheet("border: 0; color: red; font: bold;");
 
-    connect(ui->webView, SIGNAL(loadFinished(bool)), this, SLOT(onWebviewLoadFinished(bool)));
     QUrl url(QString("qrc://resources/webview/index.html"));
     ui->webView->load(url);
 
@@ -33,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->webView->page()->setWebChannel(webviewChan);
 
     serial = Serial::instance();
+    ble = BLE::instance();
 }
 
 MainWindow::~MainWindow()
@@ -43,13 +43,24 @@ MainWindow::~MainWindow()
 void MainWindow::timerEvent( QTimerEvent *event )
 {
     QMainWindow::timerEvent( event );
-
-    serial->SendCommand(MSP_RAW_IMU);
-    serial->SendCommand(MSP_RAW_BARO);
-    serial->SendCommand(MSP_STATUS);
-    serial->SendCommand(MSP_ATTITUDE);
-    serial->SendCommand(MSP_ALTITUDE);
-    serial->SendCommand(MSP_MOTOR);
+    if (winOption->GetProtocolType() == SERIAL)
+    {
+        serial->SendCommand(MSP_RAW_IMU);
+        serial->SendCommand(MSP_RAW_BARO);
+        serial->SendCommand(MSP_STATUS);
+        serial->SendCommand(MSP_ATTITUDE);
+        serial->SendCommand(MSP_ALTITUDE);
+        serial->SendCommand(MSP_MOTOR);
+    }
+    else
+    {
+        ble->SendCommand(MSP_RAW_IMU);
+        ble->SendCommand(MSP_RAW_BARO);
+        ble->SendCommand(MSP_STATUS);
+        ble->SendCommand(MSP_ATTITUDE);
+        ble->SendCommand(MSP_ALTITUDE);
+        ble->SendCommand(MSP_MOTOR);
+    }
 
     ui->motor1->update();
     ui->motor2->update();
@@ -151,25 +162,45 @@ void MainWindow::on_pushButton_clicked()
     winOption->show();
 }
 
-void MainWindow::on_pushButton_2_clicked()
+void MainWindow::on_btnConnect_clicked()
 {
-    if (serial->Connect())
+    if (winOption->GetProtocolType() == SERIAL)
     {
-        ui->statusbar->showMessage("连接成功", 2000);
-        connect(serial, SIGNAL(newResponse(uint8_t, const char*, uint8_t)), this, SLOT(onNewSerialResponse(uint8_t, const char*, uint8_t)));
-        m_serialTimerId = startTimer(50);
+        if (serial->Connect())
+        {
+            ui->statusbar->showMessage("连接成功", 2000);
+            connect(serial, SIGNAL(newResponse(uint8_t, const char*, uint8_t)), this, SLOT(onNewSerialResponse(uint8_t, const char*, uint8_t)));
+        }
+        else
+        {
+            ui->statusbar->showMessage("连接失败，请检查端口是否被占用", 2000);
+        }
+    }
+    else if (winOption->GetProtocolType() == BLE4)
+    {
+        QBluetoothDeviceInfo info = winOption->GetCurrentBle();
+        if (info.deviceUuid().toString() != "{00000000-0000-0000-0000-000000000000}")
+        {
+            ble->Connect(winOption->GetCurrentBle());
+            connect(ble, SIGNAL(newResponse(uint8_t, const char*, uint8_t)), this, SLOT(onNewSerialResponse(uint8_t, const char*, uint8_t)));
+            ui->statusbar->showMessage("连接蓝牙...", 2000);
+        }
+    }
+    m_serialTimerId = startTimer(50);
+}
+
+void MainWindow::on_btnDisconnect_clicked()
+{
+    if (winOption->GetProtocolType() == SERIAL)
+    {
+        serial->Disconnect();
+        ui->statusbar->showMessage("已断开连接", 2000);
+        disconnect(serial, SIGNAL(newResponse(uint8_t, const char*, uint8_t)), this, SLOT(onNewSerialResponse(uint8_t, const char*, uint8_t)));
     }
     else
     {
-        ui->statusbar->showMessage("连接失败，请检查端口是否被占用", 2000);
-    }
-}
 
-void MainWindow::on_pushButton_3_clicked()
-{
-    serial->Disconnect();
-    ui->statusbar->showMessage("已断开连接", 2000);
-    disconnect(serial, SIGNAL(newResponse(uint8_t, const char*, uint8_t)), this, SLOT(onNewSerialResponse(uint8_t, const char*, uint8_t)));
+    }
     if (m_serialTimerId)
     {
         killTimer(m_serialTimerId);

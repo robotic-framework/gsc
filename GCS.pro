@@ -2,6 +2,7 @@ QT       += core gui
 QT       += serialport
 QT       += svg
 QT       += webenginewidgets webchannel
+QT       += bluetooth
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -13,6 +14,7 @@ CONFIG += c++11
 
 SOURCES += \
 #    ../PlaneDashboard/verticalprogress.cpp \
+    ble.cpp \
     main.cpp \
     mainwindow.cpp \
     optiondialog.cpp \
@@ -22,6 +24,7 @@ SOURCES += \
 
 HEADERS += \
 #    ../PlaneDashboard/verticalprogress.h \
+    ble.h \
     protocol.h \
     serial.h \
     mainwindow.h \

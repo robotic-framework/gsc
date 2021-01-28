@@ -71,6 +71,20 @@
 #define MSP_DEBUGMSG 253 //out message         debug string buffer
 #define MSP_DEBUG 254    //out message         debug1,debug2,debug3,debug4
 
+
+#define INPUT_BUFFER_SIZE 64
+#define TX_BUFFER_SIZE 128
+
+enum MSP_protocol_states
+{
+    IDLE,
+    HEADER_START,
+    HEADER_M,
+    HEADER_ARROW,
+    HEADER_SIZE,
+    HEADER_CMD
+};
+
 struct StatusResponse
 {
     uint16_t CycleTime, I2CErrorCount;

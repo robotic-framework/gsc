@@ -175,7 +175,7 @@ bool Serial::Connected()
 
 void Serial::_write()
 {
-    qDebug("serial send: %s", byteArrayToHexStr(txBuffer, txBufferHead).toStdString().c_str());
+//    qDebug("serial send: %s", byteArrayToHexStr(txBuffer, txBufferHead).toStdString().c_str());
 
     io->write(txBuffer, txBufferHead);
     txBufferHead = 0;

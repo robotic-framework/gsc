@@ -5,21 +5,9 @@
 #include <QSerialPort>
 #include <QStringList>
 #include <QSerialPortInfo>
-
-#define INPUT_BUFFER_SIZE 64
-#define TX_BUFFER_SIZE 128
+#include "protocol.h"
 
 using namespace std;
-
-enum MSP_protocol_states
-{
-    IDLE,
-    HEADER_START,
-    HEADER_M,
-    HEADER_ARROW,
-    HEADER_SIZE,
-    HEADER_CMD
-};
 
 class Serial : public QObject
 {

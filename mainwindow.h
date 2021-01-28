@@ -28,8 +28,8 @@ protected:
 private slots:
     void onNewSerialResponse(uint8_t command, const char *payload, uint8_t s);
     void on_pushButton_clicked();
-    void on_pushButton_2_clicked();
-    void on_pushButton_3_clicked();
+    void on_btnConnect_clicked();
+    void on_btnDisconnect_clicked();
     void on_pushButton_4_clicked();
     void on_pushButton_5_clicked();
     void on_pushButton_6_clicked();
@@ -43,6 +43,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     Serial *serial;
+    BLE *ble;
     int m_serialTimerId;
     WebviewBridge *webviewBridge;
 };
