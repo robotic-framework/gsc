@@ -6,6 +6,7 @@
 #include <QBluetoothDeviceInfo>
 #include <QLowEnergyController>
 #include "protocol.h"
+#include "serializer.h"
 
 #define SERVICE_UUID "{0000ffe0-0000-1000-8000-00805f9b34fb}"
 #define CHAR_UUID "{0000ffe1-0000-1000-8000-00805f9b34fb}"
@@ -28,29 +29,14 @@ public:
 
 private:
     static BLE *_instance;
+    Serializer *serializer;
     QBluetoothDeviceDiscoveryAgent *bleAgent;
     QList<QBluetoothDeviceInfo> deviceList;
     QLowEnergyController *bleController;
     QLowEnergyService *bleService;
     QLowEnergyCharacteristic targetChar;
 
-    char rxBuffer[INPUT_BUFFER_SIZE];
-    uint8_t rxBufferIndex;
-    char txBuffer[TX_BUFFER_SIZE];
-    uint8_t txBufferHead;
-    uint8_t state = IDLE;
-    uint8_t command = 0;
-    uint8_t dataSize = 0;
-    uint8_t dataOffset = 0;
-    uint8_t checksum = 0;
-
     void searchCharacteristic();
-
-    void _write();
-    void _serialize(const char a);
-    void _headWrite(uint8_t command, uint8_t s);
-    void _tailWrite();
-    void _requestWrite(const char *payload, uint8_t s);
 
 private slots:
     void onNewDeviceAdd(const QBluetoothDeviceInfo &info);

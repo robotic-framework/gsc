@@ -4,6 +4,12 @@ BLE* BLE::_instance = new BLE;
 
 BLE::BLE(QObject *parent) : QObject(parent)
 {
+    serializer = new Serializer;
+    connect(serializer, &Serializer::commandDecoded, this, [this](uint8_t command, const char* payload, uint8_t s)
+    {
+        emit newResponse(command, payload, s);
+    });
+
     bleAgent = new QBluetoothDeviceDiscoveryAgent;
     bleAgent->setLowEnergyDiscoveryTimeout(10000); // 10s
     connect(bleAgent, SIGNAL(deviceDiscovered(const QBluetoothDeviceInfo &)), this, SLOT(onNewDeviceAdd(const QBluetoothDeviceInfo &)));
@@ -61,12 +67,13 @@ void BLE::SendCommand(uint8_t command, const char *payload, uint8_t s)
     {
         return;
     }
-    _headWrite(command, s);
-    _requestWrite(payload, s);
-    _tailWrite();
-    _write();
 
-    bleService->readCharacteristic(targetChar);
+    char *result = nullptr;
+    uint8_t size = 0;
+    result = serializer->Serialize(command, payload, s, &size);
+
+    QByteArray data = QByteArray(result, size);
+    bleService->writeCharacteristic(targetChar, data, QLowEnergyService::WriteWithoutResponse);
 }
 
 void BLE::SendCommand(uint8_t command)
@@ -155,60 +162,7 @@ void BLE::onCharacteristicChanged(const QLowEnergyCharacteristic &c, const QByte
     emit characteristicChanged(c, value);
     qDebug("change: %s", value.toStdString().c_str());
 
-    QByteArray payload = value;
-    uchar *ptr = (uchar *)payload.constData();
-    for (int i = 0; i < payload.size(); i++)
-    {
-        if (state == IDLE)
-        {
-            if (*ptr == '$') state = HEADER_START;
-        }
-        else if (state == HEADER_START)
-        {
-            state = (*ptr == 'M') ? HEADER_M : IDLE;
-        }
-        else if (state == HEADER_M)
-        {
-            state = (*ptr == '>') ? HEADER_ARROW : IDLE;
-        }
-        else if (state == HEADER_ARROW)
-        {
-            // size
-            if (*ptr > INPUT_BUFFER_SIZE)
-            {
-                state = IDLE;
-                continue;
-            }
-
-            dataSize = *ptr;
-            checksum = dataSize;
-            dataOffset = 0;
-            state = HEADER_SIZE;
-        }
-        else if (state == HEADER_SIZE)
-        {
-            command = *ptr;
-            checksum ^= command;
-            state = HEADER_CMD;
-        }
-        else if (state == HEADER_CMD)
-        {
-            if (dataOffset < dataSize)
-            {
-                checksum ^= *ptr;
-                rxBuffer[dataOffset++] = *ptr;
-            }
-            else
-            {
-                if (checksum == *ptr)
-                {
-                    emit newResponse(command, rxBuffer, dataSize);
-                }
-                state = IDLE;
-            }
-        }
-        ptr++;
-    }
+    serializer->Decode(value);
 }
 
 void BLE::onCharacteristicRead(const QLowEnergyCharacteristic &c, const QByteArray &value)
@@ -236,47 +190,5 @@ void BLE::searchCharacteristic()
         {
             targetChar = chars[i];
         }
-    }
-}
-
-void BLE::_write()
-{
-    QByteArray data = QByteArray(txBuffer, txBufferHead);
-    txBufferHead = 0;
-    bleService->writeCharacteristic(targetChar, data, QLowEnergyService::WriteWithoutResponse);
-}
-
-void BLE::_serialize(const char a)
-{
-    uint8_t t = txBufferHead;
-    if (t >= TX_BUFFER_SIZE)
-        _write();
-    txBuffer[t] = a;
-    t++;
-    txBufferHead = t;
-    checksum ^= a;
-}
-
-void BLE::_headWrite(uint8_t command, uint8_t s)
-{
-    _serialize('$');
-    _serialize('M');
-    _serialize('<');
-
-    checksum = 0;
-    _serialize(s);
-    _serialize(command);
-}
-
-void BLE::_tailWrite()
-{
-    _serialize(checksum);
-}
-
-void BLE::_requestWrite(const char *payload, uint8_t s)
-{
-    while (s--)
-    {
-        _serialize(*payload++);
     }
 }
