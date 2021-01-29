@@ -6,7 +6,7 @@ BLE::BLE(QObject *parent) : QObject(parent)
 {
     bleAgent = new QBluetoothDeviceDiscoveryAgent;
     bleAgent->setLowEnergyDiscoveryTimeout(10000); // 10s
-    connect(bleAgent, SIGNAL(deviceDiscovered(QBluetoothDeviceInfo)), this, SLOT(onNewDeviceAdd(QBluetoothDeviceInfo)));
+    connect(bleAgent, SIGNAL(deviceDiscovered(const QBluetoothDeviceInfo &)), this, SLOT(onNewDeviceAdd(const QBluetoothDeviceInfo &)));
     connect(bleAgent, &QBluetoothDeviceDiscoveryAgent::finished, this, [this]()
     {
         emit scanFinished();
@@ -42,6 +42,16 @@ void BLE::Disconnect()
     if (bleController != nullptr)
     {
         bleController->disconnectFromDevice();
+        disconnect(bleController, SIGNAL(connected()), this, SLOT(onServiceConnected()));
+        disconnect(bleController, SIGNAL(serviceDiscovered(const QBluetoothUuid &)), this, SLOT(onServiceDiscovered(const QBluetoothUuid &)));
+        disconnect(bleController, SIGNAL(discoveryFinished()), this, SLOT(onServiceDiscoverFinished()));
+        bleController = nullptr;
+
+        disconnect(bleService, SIGNAL(stateChanged(QLowEnergyService::ServiceState)), this, SLOT(onServiceStateChanged(QLowEnergyService::ServiceState)));
+        disconnect(bleService, SIGNAL(characteristicChanged(const QLowEnergyCharacteristic &, const QByteArray &)), this, SLOT(onCharacteristicChanged(const QLowEnergyCharacteristic &, const QByteArray &)));
+        disconnect(bleService, SIGNAL(characteristicRead(const QLowEnergyCharacteristic &, const QByteArray &)), this, SLOT(onCharacteristicRead(const QLowEnergyCharacteristic &, const QByteArray &)));
+        disconnect(bleService, SIGNAL(characteristicWritten(const QLowEnergyCharacteristic &, const QByteArray &)), this, SLOT(onCharacteristicWritten(const QLowEnergyCharacteristic &, const QByteArray &)));
+        bleService = nullptr;
     }
 }
 
@@ -55,6 +65,8 @@ void BLE::SendCommand(uint8_t command, const char *payload, uint8_t s)
     _requestWrite(payload, s);
     _tailWrite();
     _write();
+
+    bleService->readCharacteristic(targetChar);
 }
 
 void BLE::SendCommand(uint8_t command)
@@ -118,7 +130,6 @@ void BLE::onServiceDiscoverFinished()
 
             if (bleService->state() == QLowEnergyService::DiscoveryRequired)
             {
-                qDebug("discoverDetails");
                 bleService->discoverDetails();
             }
             else
@@ -142,6 +153,7 @@ void BLE::onServiceStateChanged(QLowEnergyService::ServiceState state)
 void BLE::onCharacteristicChanged(const QLowEnergyCharacteristic &c, const QByteArray &value)
 {
     emit characteristicChanged(c, value);
+    qDebug("change: %s", value.toStdString().c_str());
 
     QByteArray payload = value;
     uchar *ptr = (uchar *)payload.constData();
@@ -202,11 +214,13 @@ void BLE::onCharacteristicChanged(const QLowEnergyCharacteristic &c, const QByte
 void BLE::onCharacteristicRead(const QLowEnergyCharacteristic &c, const QByteArray &value)
 {
     emit characteristicRead(c, value);
+    qDebug("read: %s", value.toStdString().c_str());
 }
 
 void BLE::onCharacteristicWritten(const QLowEnergyCharacteristic &c, const QByteArray &value)
 {
     emit characteristicWritten(c, value);
+    qDebug("write: %s", value.toHex().toStdString().c_str());
 }
 
 void BLE::searchCharacteristic()

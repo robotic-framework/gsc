@@ -199,8 +199,10 @@ void MainWindow::on_btnDisconnect_clicked()
     }
     else
     {
-
+        ble->Disconnect();
+        disconnect(ble, SIGNAL(newResponse(uint8_t, const char*, uint8_t)), this, SLOT(onNewSerialResponse(uint8_t, const char*, uint8_t)));
     }
+    ui->statusbar->showMessage("已断开连接", 2000);
     if (m_serialTimerId)
     {
         killTimer(m_serialTimerId);

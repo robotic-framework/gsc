@@ -20,6 +20,7 @@ SOURCES += \
     optiondialog.cpp \
     protocol.cpp \
     serial.cpp \
+    serializer.cpp \
     webviewbridge.cpp
 
 HEADERS += \
@@ -29,6 +30,7 @@ HEADERS += \
     serial.h \
     mainwindow.h \
     optiondialog.h \
+    serializer.h \
     webviewbridge.h
 
 FORMS += \

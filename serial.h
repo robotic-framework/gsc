@@ -6,6 +6,7 @@
 #include <QStringList>
 #include <QSerialPortInfo>
 #include "protocol.h"
+#include "serializer.h"
 
 using namespace std;
 
@@ -41,11 +42,6 @@ private:
 
 private slots:
     void onRead();
-    void _write();
-    void _serialize(const char a);
-    void _headWrite(uint8_t command, uint8_t s);
-    void _tailWrite();
-    void _requestWrite(const char *payload, uint8_t s);
 
 
 private:
@@ -59,22 +55,11 @@ private:
     uint timerId;
 
     QSerialPort *io;
-
-    char rxBuffer[INPUT_BUFFER_SIZE];
-    uint8_t rxBufferIndex;
-    char txBuffer[TX_BUFFER_SIZE];
-    uint8_t txBufferHead;
-    uint8_t state = IDLE;
-    uint8_t command = 0;
-    uint8_t dataSize = 0;
-    uint8_t dataOffset = 0;
-    uint8_t checksum = 0;
+    Serializer *serializer;
 
 signals:
     void newSerialPort(QStringList);
     void newResponse(uint8_t, const char*, uint8_t);
 };
-
-static QString byteArrayToHexStr(const char *payload, int size);
 
 #endif // SERIAL_H
