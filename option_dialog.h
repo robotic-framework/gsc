@@ -1,5 +1,5 @@
-#ifndef OPTIONDIALOG_H
-#define OPTIONDIALOG_H
+#ifndef OPTION_DIALOG_H
+#define OPTION_DIALOG_H
 
 #include <QDialog>
 #include <QStringList>
@@ -29,7 +29,6 @@ public:
     ~OptionDialog();
 
     ProtocolType GetProtocolType() { return _type; };
-    QBluetoothDeviceInfo GetCurrentBle() { return currentBle; };
 
 private slots:
     void on_pushButton_clicked();
@@ -60,9 +59,8 @@ private:
     Serial *serial;
     BLE *ble;
     QList<QBluetoothDeviceInfo> deviceList;
-    QBluetoothDeviceInfo currentBle;
 
     ProtocolType _type = SERIAL;
 };
 
-#endif // OPTIONDIALOG_H
+#endif // OPTION_DIALOG_H

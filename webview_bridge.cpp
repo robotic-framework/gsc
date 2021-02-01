@@ -1,4 +1,4 @@
-#include "webviewbridge.h"
+#include "webview_bridge.h"
 
 WebviewBridge::WebviewBridge(Ui::MainWindow *ui, QObject *parent) : QObject(parent),
     ui(ui)

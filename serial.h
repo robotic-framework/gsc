@@ -6,17 +6,19 @@
 #include <QStringList>
 #include <QSerialPortInfo>
 #include "protocol.h"
-#include "serializer.h"
+#include "serializable_connector.h"
 
 using namespace std;
 
-class Serial : public QObject
+class Serial : public SerializableConnector
 {
     Q_OBJECT
 
+private:
+    Serial(QObject *parent = nullptr);
+
 public:
     static Serial* instance();
-    void ScanPorts();
     void SetSelectedPort(const QString &port);
     void SetSelectedBaudrate(const QString &rate);
     void SetSelectedDatabits(const QString &value);
@@ -27,18 +29,18 @@ public:
     QSerialPort::DataBits GetSelectedDatabits();
     QSerialPort::Parity GetSelectedParity();
     QSerialPort::StopBits GetSelectedStopbits();
-    bool Connect();
-    void Disconnect();
-    bool Connected();
-    void SendCommand(uint8_t command, const char *payload, uint8_t s);
-    void SendCommand(uint8_t command);
-    bool IsWritable();
+
+    void Scan() final;
+    void StopScan() final;
+    bool Connect() final;
+    void Disconnect() final;
+    bool Connected() final;
+    void SendCommand(uint8_t command, const char *payload, uint8_t s) final;
+    void SendCommand(uint8_t command) final;
+    bool IsWritable() final;
 
 protected:
     void timerEvent( QTimerEvent *event );
-
-private:
-    Serial();
 
 private slots:
     void onRead();
@@ -55,11 +57,9 @@ private:
     uint timerId;
 
     QSerialPort *io;
-    Serializer *serializer;
 
 signals:
     void newSerialPort(QStringList);
-    void newResponse(uint8_t, const char*, uint8_t);
 };
 
 #endif // SERIAL_H

@@ -1,6 +1,6 @@
 #include <QtWebEngineWidgets>
 #include <QWebChannel>
-#include "mainwindow.h"
+#include "main_window.h"
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -178,12 +178,11 @@ void MainWindow::on_btnConnect_clicked()
     }
     else if (winOption->GetProtocolType() == BLE4)
     {
-        QBluetoothDeviceInfo info = winOption->GetCurrentBle();
-        if (info.deviceUuid().toString() != "{00000000-0000-0000-0000-000000000000}")
-        {
-            ble->Connect(winOption->GetCurrentBle());
+        if (ble->Connect()) {
+            ui->statusbar->showMessage("连接成功", 2000);
             connect(ble, SIGNAL(newResponse(uint8_t, const char*, uint8_t)), this, SLOT(onNewSerialResponse(uint8_t, const char*, uint8_t)));
-            ui->statusbar->showMessage("连接蓝牙...", 2000);
+        } else {
+            ui->statusbar->showMessage("蓝牙连接失败，未选择蓝牙设备", 2000);
         }
     }
     m_serialTimerId = startTimer(50);

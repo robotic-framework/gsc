@@ -1,4 +1,4 @@
-#include "optiondialog.h"
+#include "option_dialog.h"
 #include "ui_optiondialog.h"
 #include <QBluetoothUuid>
 
@@ -10,7 +10,7 @@ OptionDialog::OptionDialog(QWidget *parent) :
     serial = Serial::instance();
     connect(serial, SIGNAL(newSerialPort(QStringList)), this, SLOT(onNewSerialPort(QStringList)));
 
-    serial->ScanPorts();
+    serial->Scan();
 
     ble = BLE::instance();
     connect(ble, SIGNAL(newDeviceAdd(const QBluetoothDeviceInfo &)), this, SLOT(onNewBLEDeviceAdd(const QBluetoothDeviceInfo &)));
@@ -66,7 +66,7 @@ void OptionDialog::onNewBLEDeviceAdd(const QBluetoothDeviceInfo &info)
 
 void OptionDialog::on_btnRefresh_clicked()
 {
-    serial->ScanPorts();
+    serial->Scan();
 }
 
 void OptionDialog::on_comboPorts_activated(const QString &arg1)
@@ -115,7 +115,7 @@ void OptionDialog::on_listBLE_itemClicked(QListWidgetItem *item)
         {
             if (deviceList[i].deviceUuid().toString() == tmp[1])
             {
-                currentBle = deviceList[i];
+                ble->SetCurrentDevice(deviceList[i]);
                 break;
             }
         }

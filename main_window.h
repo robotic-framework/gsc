@@ -1,12 +1,12 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef MAIN_WINDOW_H
+#define MAIN_WINDOW_H
 
 #include <QMainWindow>
 #include <QScrollBar>
-#include "optiondialog.h"
+#include "option_dialog.h"
 #include "serial.h"
 #include "protocol.h"
-#include "webviewbridge.h"
+#include "webview_bridge.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -47,4 +47,4 @@ private:
     int m_serialTimerId;
     WebviewBridge *webviewBridge;
 };
-#endif // MAINWINDOW_H
+#endif // MAIN_WINDOW_H

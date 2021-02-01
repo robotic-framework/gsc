@@ -2,7 +2,7 @@
 
 BLE* BLE::_instance = new BLE;
 
-BLE::BLE(QObject *parent) : QObject(parent)
+BLE::BLE(QObject *parent) : SerializableConnector(parent)
 {
     serializer = new Serializer;
     connect(serializer, &Serializer::commandDecoded, this, [this](uint8_t command, const char* payload, uint8_t s)
@@ -34,13 +34,17 @@ void BLE::StopScan()
     bleAgent->stop();
 }
 
-void BLE::Connect(const QBluetoothDeviceInfo &info)
-{
-    bleController = new QLowEnergyController(info);
+bool BLE::Connect() {
+    if (currentDevice.deviceUuid().toString() == INVALID_UUID) {
+        return false;
+    }
+
+    bleController = new QLowEnergyController(currentDevice);
     connect(bleController, SIGNAL(connected()), this, SLOT(onServiceConnected()));
     connect(bleController, SIGNAL(serviceDiscovered(const QBluetoothUuid &)), this, SLOT(onServiceDiscovered(const QBluetoothUuid &)));
     connect(bleController, SIGNAL(discoveryFinished()), this, SLOT(onServiceDiscoverFinished()));
     bleController->connectToDevice();
+    return true;
 }
 
 void BLE::Disconnect()
@@ -59,6 +63,10 @@ void BLE::Disconnect()
         disconnect(bleService, SIGNAL(characteristicWritten(const QLowEnergyCharacteristic &, const QByteArray &)), this, SLOT(onCharacteristicWritten(const QLowEnergyCharacteristic &, const QByteArray &)));
         bleService = nullptr;
     }
+}
+
+bool BLE::Connected() {
+    return bleService;
 }
 
 void BLE::SendCommand(uint8_t command, const char *payload, uint8_t s)
@@ -83,7 +91,7 @@ void BLE::SendCommand(uint8_t command)
 
 bool BLE::IsWritable()
 {
-    return (bleService && targetChar.uuid().toString() != "{00000000-0000-0000-0000-000000000000}");
+    return (bleService && targetChar.uuid().toString() != INVALID_UUID);
 }
 
 void BLE::onNewDeviceAdd(const QBluetoothDeviceInfo &info)

@@ -18,7 +18,7 @@ find_package(Qt5Webenginewidgets)
 find_package(Qt5Webchannel)
 find_package(Qt5Bluetooth)
 
-set(UI_FILES mainwindow.ui optiondialog.ui)
+set(UI_FILES main_window.ui option_dialog.ui)
 
 set(RC_FILES)
 
@@ -26,10 +26,13 @@ set(QRC_FILES resources.qrc)
 
 set(SOURCE_FILES
         main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        optiondialog.h
-        optiondialog.cpp
+        main_window.cpp
+        main_window.h
+        option_dialog.h
+        option_dialog.cpp
+        connector.h
+        connector_bridge.h
+        connector_bridge.cpp
         ble.h
         ble.cpp
         serial.h
@@ -38,8 +41,8 @@ set(SOURCE_FILES
         serializer.cpp
         protocol.h
         protocol.cpp
-        webviewbridge.h
-        webviewbridge.cpp
+        webview_bridge.h
+        webview_bridge.cpp
 )
 
 add_executable(${PROJECT_NAME} ${RC_FILES} ${SOURCE_FILES} ${UI_FILES} ${QRC_FILES})

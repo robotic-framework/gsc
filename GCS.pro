@@ -15,27 +15,32 @@ CONFIG += c++11
 SOURCES += \
 #    ../PlaneDashboard/verticalprogress.cpp \
     ble.cpp \
+    connector_bridge.cpp \
     main.cpp \
-    mainwindow.cpp \
-    optiondialog.cpp \
+    main_window.cpp \
+    option_dialog.cpp \
     protocol.cpp \
     serial.cpp \
+    serializable_connector.cpp \
     serializer.cpp \
-    webviewbridge.cpp
+    webview_bridge.cpp
 
 HEADERS += \
 #    ../PlaneDashboard/verticalprogress.h \
     ble.h \
+    connector.h \
+    connector_bridge.h \
+    main_window.h \
+    option_dialog.h \
     protocol.h \
     serial.h \
-    mainwindow.h \
-    optiondialog.h \
+    serializable_connector.h \
     serializer.h \
-    webviewbridge.h
+    webview_bridge.h
 
 FORMS += \
-    mainwindow.ui \
-    optiondialog.ui
+    main_window.ui \
+    option_dialog.ui
 
 TRANSLATIONS += \
     GCS_zh_CN.ts

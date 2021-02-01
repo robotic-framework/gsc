@@ -1,5 +1,5 @@
-#ifndef WEBVIEWBRIDGE_H
-#define WEBVIEWBRIDGE_H
+#ifndef WEBVIEW_BRIDGE_H
+#define WEBVIEW_BRIDGE_H
 
 #include <QObject>
 #include "ui_mainwindow.h"
@@ -28,4 +28,4 @@ private:
 
 };
 
-#endif // WEBVIEWBRIDGE_H
+#endif // WEBVIEW_BRIDGE_H
