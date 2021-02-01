@@ -135,15 +135,8 @@ void BLE::onServiceDiscoverFinished()
             connect(bleService, SIGNAL(characteristicRead(const QLowEnergyCharacteristic &, const QByteArray &)), this, SLOT(onCharacteristicRead(const QLowEnergyCharacteristic &, const QByteArray &)));
             connect(bleService, SIGNAL(characteristicWritten(const QLowEnergyCharacteristic &, const QByteArray &)), this, SLOT(onCharacteristicWritten(const QLowEnergyCharacteristic &, const QByteArray &)));
 
-            if (bleService->state() == QLowEnergyService::DiscoveryRequired)
-            {
-                bleService->discoverDetails();
-            }
-            else
-            {
-                searchCharacteristic();
-            }
-            return;
+            bleService->discoverDetails();
+            break;
         }
     }
 }
@@ -189,6 +182,27 @@ void BLE::searchCharacteristic()
         if (chars[i].uuid().toString() == CHAR_UUID)
         {
             targetChar = chars[i];
+            break;
         }
+    }
+
+    if (targetChar.properties().testFlag(QLowEnergyCharacteristic::Notify))
+    {
+        qDebug("can notify");
+    }
+
+    if (targetChar.properties().testFlag(QLowEnergyCharacteristic::Read))
+    {
+        qDebug("can read");
+    }
+
+    if (targetChar.properties().testFlag(QLowEnergyCharacteristic::Write))
+    {
+        qDebug("can write");
+    }
+
+    if (targetChar.properties().testFlag(QLowEnergyCharacteristic::WriteNoResponse))
+    {
+        qDebug("can write no response");
     }
 }

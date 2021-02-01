@@ -77,7 +77,7 @@ char* Serializer::Serialize(uint8_t command, uint8_t *size)
 
 char* Serializer::_write(uint8_t *size)
 {
-    qDebug("serial send: %s", byteArrayToHexStr(txBuffer, txBufferHead).toStdString().c_str());
+//    qDebug("serial send: %s", byteArrayToHexStr(txBuffer, txBufferHead).toStdString().c_str());
     *size = txBufferHead;
     txBufferHead = 0;
     return txBuffer;

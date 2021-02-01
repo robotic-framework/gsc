@@ -73,3 +73,6 @@ Thumbs.db
 
 webview/.vscode/launch.json
 .idea
+cmake-build-debug
+cmake-build-release
+CMakeLists.txt.user

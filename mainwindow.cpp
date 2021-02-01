@@ -211,18 +211,40 @@ void MainWindow::on_btnDisconnect_clicked()
 
 void MainWindow::on_pushButton_4_clicked()
 {
-    serial->SendCommand(MSP_ACC_CALIBRATION);
-    serial->SendCommand(MSP_MAG_CALIBRATION);
+    if (winOption->GetProtocolType() == SERIAL)
+    {
+        serial->SendCommand(MSP_ACC_CALIBRATION);
+        serial->SendCommand(MSP_MAG_CALIBRATION);
+    }
+    else
+    {
+        ble->SendCommand(MSP_ACC_CALIBRATION);
+        ble->SendCommand(MSP_MAG_CALIBRATION);
+    }
 }
 
 void MainWindow::on_pushButton_5_clicked()
 {
-    serial->SendCommand(MSP_ARM);
+    if (winOption->GetProtocolType() == SERIAL)
+    {
+        serial->SendCommand(MSP_ARM);
+    }
+    else
+    {
+        ble->SendCommand(MSP_ARM);
+    }
 }
 
 void MainWindow::on_pushButton_6_clicked()
 {
-    serial->SendCommand(MSP_DIS_ARM);
+    if (winOption->GetProtocolType() == SERIAL)
+    {
+        serial->SendCommand(MSP_DIS_ARM);
+    }
+    else
+    {
+        ble->SendCommand(MSP_DIS_ARM);
+    }
 }
 
 void MainWindow::on_actionDashboard_triggered()
