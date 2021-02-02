@@ -79,7 +79,7 @@ void Serial::setSelectedStopbits(const QString &value) {
 }
 
 bool Serial::Connect() {
-    if (port.isEmpty() || baudrate == 0 || dataBits == 0 || parity == 0 || stopBits == 0) {
+    if (port.isEmpty() || baudrate == 0 || dataBits == 0 || stopBits == 0) {
         return false;
     }
     io->setPortName(port);

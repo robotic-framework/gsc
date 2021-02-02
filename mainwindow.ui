@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout" stretch="0">
     <property name="spacing">
-     <number>-1</number>
+     <number>6</number>
     </property>
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
@@ -589,7 +589,7 @@
              <number>0</number>
             </property>
             <item>
-             <widget class="QPushButton" name="pushButton">
+             <widget class="QPushButton" name="btnConfig">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
                 <horstretch>0</horstretch>
@@ -597,7 +597,7 @@
                </sizepolicy>
               </property>
               <property name="text">
-               <string>串口设置</string>
+               <string>连接设置</string>
               </property>
              </widget>
             </item>
@@ -724,7 +724,7 @@
      <x>0</x>
      <y>0</y>
      <width>1205</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

@@ -3,10 +3,11 @@
 
 #include <QMainWindow>
 #include <QScrollBar>
-#include "optiondialog.h"
+#include "ble.h"
 #include "serial.h"
 #include "protocol.h"
 #include "webview_bridge.h"
+#include "optiondialog.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -20,14 +21,16 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    OptionDialog *winOption;
+    void SetStatusText(const QString &val) {
+        lblStatus->setText(val);
+    };
 
 protected:
     void timerEvent( QTimerEvent *event );
 
 private slots:
     void onNewSerialResponse(uint8_t command, const char *payload, uint8_t s);
-    void on_pushButton_clicked();
+    void on_btnConfig_clicked();
     void on_btnConnect_clicked();
     void on_btnDisconnect_clicked();
     void on_pushButton_4_clicked();
@@ -42,9 +45,11 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    QLabel *lblStatus;
     Serial *serial;
     BLE *ble;
     int m_serialTimerId;
     WebviewBridge *webviewBridge;
+    OptionDialog *winOption;
 };
 #endif // MAINWINDOW_H

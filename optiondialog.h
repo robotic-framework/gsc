@@ -23,11 +23,12 @@ class OptionDialog : public QDialog {
 Q_OBJECT
 
 public:
-    explicit OptionDialog(QWidget *parent = nullptr);
-
     ~OptionDialog();
 
     ProtocolType GetProtocolType() { return _type; };
+
+private:
+    explicit OptionDialog(QWidget *parent = nullptr);
 
 private slots:
 
@@ -59,6 +60,7 @@ private slots:
     void on_tabWidget_currentChanged(int index);
 
 private:
+
     Ui::OptionDialog *ui;
     Serial *serial;
     BLE *ble;
@@ -68,6 +70,16 @@ private:
     SerialInfo serialConfig;
 
     ProtocolType _type = SERIAL;
+
+public:
+    static OptionDialog* instance() {
+        static OptionDialog *_instance = new OptionDialog;
+        return _instance;
+    }
+
+signals:
+
+    void connectionConfirm(const ProtocolType &ProtocolType, const SerialInfo &SerialInfo);
 };
 
 #endif // OPTIONDIALOG_H

@@ -15,7 +15,7 @@ public:
 protected:
     Serializer *serializer;
 
-signals:
+Q_SIGNALS:
     void newResponse(uint8_t, const char*, uint8_t);
 };
 

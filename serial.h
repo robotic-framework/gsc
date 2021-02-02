@@ -16,6 +16,10 @@ struct SerialInfo {
     QString dataBits;
     QString parity;
     QString stopBits;
+
+    QString toString() const {
+        return QString("%1 [%2] %3-%4-%5").arg(port, rate, dataBits, parity, stopBits);
+    };
 };
 
 class Serial : public SerializableConnector

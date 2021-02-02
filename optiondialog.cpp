@@ -5,7 +5,8 @@
 
 OptionDialog::OptionDialog(QWidget *parent) :
         QDialog(parent),
-        ui(new Ui::OptionDialog) {
+        ui(new Ui::OptionDialog),
+        _type(SERIAL) {
     ui->setupUi(this);
     serial = Serial::instance();
     connect(serial, SIGNAL(newSerialPort(QStringList)), this, SLOT(onNewSerialPort(QStringList)));
@@ -42,6 +43,7 @@ void OptionDialog::on_btnConfirm_clicked() {
             !serialConfig.parity.isEmpty() &&
             !serialConfig.stopBits.isEmpty()) {
             serial->SetConfig(serialConfig);
+            emit connectionConfirm(SERIAL, serialConfig);
         } else {
             QMessageBox::critical(nullptr, "未指定配置", "未选择有效的串口设备", QMessageBox::Ok);
             return;
@@ -50,6 +52,7 @@ void OptionDialog::on_btnConfirm_clicked() {
         if (bleConfig.isValid()) {
             ble->SetCurrentDevice(bleConfig);
             ble->StopScan();
+            emit connectionConfirm(BLE4, serialConfig);
         } else {
             QMessageBox::critical(nullptr, "未指定配置", "未选择需要连接的蓝牙设备", QMessageBox::Ok);
             return;
@@ -70,7 +73,7 @@ void OptionDialog::onNewSerialPort(QStringList ports) {
 
     if (serialConfig.port.isEmpty()) {
         serialConfig.port = ports.constFirst();
-        ui->comboPorts->setCurrentText(ports);
+        ui->comboPorts->setCurrentText(ports.constFirst());
     }
 }
 

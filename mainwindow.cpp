@@ -6,7 +6,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow),
-      winOption(nullptr)
+      lblStatus(new QLabel)
 {
     ui->setupUi(this);
     ui->dashboardADI->verticalScrollBar()->setEnabled(false);
@@ -30,6 +30,14 @@ MainWindow::MainWindow(QWidget *parent)
     webviewBridge = new WebviewBridge(ui, this);
     webviewChan->registerObject("bridge", webviewBridge);
     ui->webView->page()->setWebChannel(webviewChan);
+
+    winOption = OptionDialog::instance();
+    connect(winOption, &OptionDialog::connectionConfirm, this, [this](const ProtocolType &type, const SerialInfo &config) {
+        lblStatus->setText(config.toString());
+    });
+
+    lblStatus->setText("");
+    ui->statusbar->addPermanentWidget(lblStatus);
 
     serial = Serial::instance();
     ble = BLE::instance();
@@ -153,12 +161,8 @@ void MainWindow::onNewSerialResponse(uint8_t command, const char *payload, uint8
     }
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_btnConfig_clicked()
 {
-    if(winOption == nullptr)
-    {
-        winOption = new OptionDialog;
-    }
     winOption->show();
 }
 
