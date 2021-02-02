@@ -10,6 +10,14 @@
 
 using namespace std;
 
+struct SerialInfo {
+    QString port;
+    QString rate;
+    QString dataBits;
+    QString parity;
+    QString stopBits;
+};
+
 class Serial : public SerializableConnector
 {
     Q_OBJECT
@@ -19,16 +27,7 @@ private:
 
 public:
     static Serial* instance();
-    void SetSelectedPort(const QString &port);
-    void SetSelectedBaudrate(const QString &rate);
-    void SetSelectedDatabits(const QString &value);
-    void SetSelectedParity(const QString &value);
-    void SetSelectedStopbits(const QString &value);
-    QString GetSelectedPort();
-    uint GetSelectedBaudrate();
-    QSerialPort::DataBits GetSelectedDatabits();
-    QSerialPort::Parity GetSelectedParity();
-    QSerialPort::StopBits GetSelectedStopbits();
+    void SetConfig(const SerialInfo &config);
 
     void Scan() final;
     void StopScan() final;
@@ -40,19 +39,25 @@ public:
     bool IsWritable() final;
 
 protected:
-    void timerEvent( QTimerEvent *event );
+    void timerEvent( QTimerEvent *event ) override;
 
 private slots:
     void onRead();
 
+private:
+    void setSelectedPort(const QString &port);
+    void setSelectedBaudrate(const QString &rate);
+    void setSelectedDatabits(const QString &value);
+    void setSelectedParity(const QString &value);
+    void setSelectedStopbits(const QString &value);
 
 private:
     static Serial* _instance;
     QString port;
     uint baudrate;
-    QSerialPort::DataBits databits;
+    QSerialPort::DataBits dataBits;
     QSerialPort::Parity parity;
-    QSerialPort::StopBits stopbits;
+    QSerialPort::StopBits stopBits;
     bool isWritable;
     uint timerId;
 

@@ -17,8 +17,8 @@ SOURCES += \
     ble.cpp \
     connector_bridge.cpp \
     main.cpp \
-    main_window.cpp \
-    option_dialog.cpp \
+    mainwindow.cpp \
+    optiondialog.cpp \
     protocol.cpp \
     serial.cpp \
     serializable_connector.cpp \
@@ -30,8 +30,8 @@ HEADERS += \
     ble.h \
     connector.h \
     connector_bridge.h \
-    main_window.h \
-    option_dialog.h \
+    mainwindow.h \
+    optiondialog.h \
     protocol.h \
     serial.h \
     serializable_connector.h \
@@ -39,8 +39,8 @@ HEADERS += \
     webview_bridge.h
 
 FORMS += \
-    main_window.ui \
-    option_dialog.ui
+    mainwindow.ui \
+    optiondialog.ui
 
 TRANSLATIONS += \
     GCS_zh_CN.ts

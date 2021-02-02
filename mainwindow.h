@@ -1,9 +1,9 @@
-#ifndef MAIN_WINDOW_H
-#define MAIN_WINDOW_H
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 
 #include <QMainWindow>
 #include <QScrollBar>
-#include "option_dialog.h"
+#include "optiondialog.h"
 #include "serial.h"
 #include "protocol.h"
 #include "webview_bridge.h"
@@ -47,4 +47,4 @@ private:
     int m_serialTimerId;
     WebviewBridge *webviewBridge;
 };
-#endif // MAIN_WINDOW_H
+#endif // MAINWINDOW_H

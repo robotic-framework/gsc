@@ -1,6 +1,6 @@
 #include <QtWebEngineWidgets>
 #include <QWebChannel>
-#include "main_window.h"
+#include "mainwindow.h"
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)

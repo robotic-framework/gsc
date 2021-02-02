@@ -5,10 +5,6 @@ Serial *Serial::_instance = new Serial;
 Serial::Serial(QObject *parent) : SerializableConnector(parent),
                                   isWritable(false) {
     io = new QSerialPort;
-    baudrate = 115200;
-    databits = QSerialPort::Data8;
-    parity = QSerialPort::NoParity;
-    stopbits = QSerialPort::OneStop;
     connect(serializer, &Serializer::commandDecoded, this, [this](uint8_t command, const char *payload, uint8_t s) {
         emit newResponse(command, payload, s);
     });
@@ -37,32 +33,32 @@ void Serial::StopScan() {
 
 }
 
-void Serial::SetSelectedPort(const QString &port) {
+void Serial::setSelectedPort(const QString &port) {
     this->port = "/dev/" + port;
 }
 
-void Serial::SetSelectedBaudrate(const QString &rate) {
+void Serial::setSelectedBaudrate(const QString &rate) {
     baudrate = rate.toUInt();
 }
 
-void Serial::SetSelectedDatabits(const QString &value) {
+void Serial::setSelectedDatabits(const QString &value) {
     switch (value.toUInt()) {
         case 5:
-            databits = QSerialPort::Data5;
+            dataBits = QSerialPort::Data5;
             break;
         case 6:
-            databits = QSerialPort::Data6;
+            dataBits = QSerialPort::Data6;
             break;
         case 7:
-            databits = QSerialPort::Data7;
+            dataBits = QSerialPort::Data7;
             break;
         case 8:
-            databits = QSerialPort::Data8;
+            dataBits = QSerialPort::Data8;
             break;
     }
 }
 
-void Serial::SetSelectedParity(const QString &value) {
+void Serial::setSelectedParity(const QString &value) {
     if (value == "None") {
         parity = QSerialPort::NoParity;
     } else if (value == "Odd") {
@@ -72,42 +68,25 @@ void Serial::SetSelectedParity(const QString &value) {
     }
 }
 
-void Serial::SetSelectedStopbits(const QString &value) {
+void Serial::setSelectedStopbits(const QString &value) {
     if (value == "1") {
-        stopbits = QSerialPort::OneStop;
+        stopBits = QSerialPort::OneStop;
     } else if (value == "1.5") {
-        stopbits = QSerialPort::OneAndHalfStop;
+        stopBits = QSerialPort::OneAndHalfStop;
     } else if (value == "2") {
-        stopbits = QSerialPort::TwoStop;
+        stopBits = QSerialPort::TwoStop;
     }
 }
 
-QString Serial::GetSelectedPort() {
-    return port;
-}
-
-uint Serial::GetSelectedBaudrate() {
-    return baudrate;
-}
-
-QSerialPort::DataBits Serial::GetSelectedDatabits() {
-    return databits;
-}
-
-QSerialPort::Parity Serial::GetSelectedParity() {
-    return parity;
-}
-
-QSerialPort::StopBits Serial::GetSelectedStopbits() {
-    return stopbits;
-}
-
 bool Serial::Connect() {
+    if (port.isEmpty() || baudrate == 0 || dataBits == 0 || parity == 0 || stopBits == 0) {
+        return false;
+    }
     io->setPortName(port);
     io->setBaudRate(baudrate);
-    io->setDataBits(databits);
+    io->setDataBits(dataBits);
     io->setParity(parity);
-    io->setStopBits(stopbits);
+    io->setStopBits(stopBits);
     io->setFlowControl(QSerialPort::NoFlowControl);
 
     if (io->open(QIODevice::ReadWrite)) {
@@ -170,4 +149,12 @@ void Serial::SendCommand(uint8_t command) {
 void Serial::onRead() {
     QByteArray payload = io->readAll();
     serializer->Decode(payload);
+}
+
+void Serial::SetConfig(const SerialInfo &config) {
+    setSelectedPort(config.port);
+    setSelectedBaudrate(config.rate);
+    setSelectedDatabits(config.dataBits);
+    setSelectedParity(config.parity);
+    setSelectedStopbits(config.stopBits);
 }
