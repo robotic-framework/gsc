@@ -6,7 +6,8 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow),
-      lblStatus(new QLabel)
+      lblStatus(new QLabel),
+      bridge(ConnectorBridge::instance())
 {
     ui->setupUi(this);
     ui->dashboardADI->verticalScrollBar()->setEnabled(false);
@@ -32,15 +33,12 @@ MainWindow::MainWindow(QWidget *parent)
     ui->webView->page()->setWebChannel(webviewChan);
 
     winOption = OptionDialog::instance();
-    connect(winOption, &OptionDialog::connectionConfirm, this, [this](const ProtocolType &type, const SerialInfo &config) {
-        lblStatus->setText(config.toString());
+    connect(winOption, &OptionDialog::connectionConfirm, this, [this](const ProtocolType &type, const ConnectionConfig *config) {
+        lblStatus->setText(config->toString());
     });
 
     lblStatus->setText("");
     ui->statusbar->addPermanentWidget(lblStatus);
-
-    serial = Serial::instance();
-    ble = BLE::instance();
 }
 
 MainWindow::~MainWindow()
@@ -51,24 +49,12 @@ MainWindow::~MainWindow()
 void MainWindow::timerEvent( QTimerEvent *event )
 {
     QMainWindow::timerEvent( event );
-    if (winOption->GetProtocolType() == SERIAL)
-    {
-        serial->SendCommand(MSP_RAW_IMU);
-        serial->SendCommand(MSP_RAW_BARO);
-        serial->SendCommand(MSP_STATUS);
-        serial->SendCommand(MSP_ATTITUDE);
-        serial->SendCommand(MSP_ALTITUDE);
-        serial->SendCommand(MSP_MOTOR);
-    }
-    else
-    {
-        ble->SendCommand(MSP_RAW_IMU);
-        ble->SendCommand(MSP_RAW_BARO);
-        ble->SendCommand(MSP_STATUS);
-        ble->SendCommand(MSP_ATTITUDE);
-        ble->SendCommand(MSP_ALTITUDE);
-        ble->SendCommand(MSP_MOTOR);
-    }
+    bridge->SendCommand(MSP_RAW_IMU);
+    bridge->SendCommand(MSP_RAW_BARO);
+    bridge->SendCommand(MSP_STATUS);
+    bridge->SendCommand(MSP_ATTITUDE);
+    bridge->SendCommand(MSP_ALTITUDE);
+    bridge->SendCommand(MSP_MOTOR);
 
     ui->motor1->update();
     ui->motor2->update();
@@ -168,44 +154,21 @@ void MainWindow::on_btnConfig_clicked()
 
 void MainWindow::on_btnConnect_clicked()
 {
-    if (winOption->GetProtocolType() == SERIAL)
-    {
-        if (serial->Connect())
-        {
-            ui->statusbar->showMessage("连接成功", 2000);
-            connect(serial, SIGNAL(newResponse(uint8_t, const char*, uint8_t)), this, SLOT(onNewSerialResponse(uint8_t, const char*, uint8_t)));
-        }
-        else
-        {
-            ui->statusbar->showMessage("连接失败，请检查端口是否被占用", 2000);
-        }
-    }
-    else if (winOption->GetProtocolType() == BLE4)
-    {
-        if (ble->Connect()) {
-            ui->statusbar->showMessage("连接成功", 2000);
-            connect(ble, SIGNAL(newResponse(uint8_t, const char*, uint8_t)), this, SLOT(onNewSerialResponse(uint8_t, const char*, uint8_t)));
-        } else {
-            ui->statusbar->showMessage("蓝牙连接失败，未选择蓝牙设备", 2000);
-        }
+    if (bridge->Connect()) {
+        ui->statusbar->showMessage("连接成功", 2000);
+        connect(bridge, SIGNAL(newResponse(uint8_t, const char*, uint8_t)), this, SLOT(onNewSerialResponse(uint8_t, const char*, uint8_t)));
+    } else {
+        ui->statusbar->showMessage("连接失败", 2000);
     }
     m_serialTimerId = startTimer(50);
 }
 
 void MainWindow::on_btnDisconnect_clicked()
 {
-    if (winOption->GetProtocolType() == SERIAL)
-    {
-        serial->Disconnect();
-        ui->statusbar->showMessage("已断开连接", 2000);
-        disconnect(serial, SIGNAL(newResponse(uint8_t, const char*, uint8_t)), this, SLOT(onNewSerialResponse(uint8_t, const char*, uint8_t)));
-    }
-    else
-    {
-        ble->Disconnect();
-        disconnect(ble, SIGNAL(newResponse(uint8_t, const char*, uint8_t)), this, SLOT(onNewSerialResponse(uint8_t, const char*, uint8_t)));
-    }
+    bridge->Disconnect();
     ui->statusbar->showMessage("已断开连接", 2000);
+    disconnect(bridge, SIGNAL(newResponse(uint8_t, const char*, uint8_t)), this, SLOT(onNewSerialResponse(uint8_t, const char*, uint8_t)));
+
     if (m_serialTimerId)
     {
         killTimer(m_serialTimerId);
@@ -214,40 +177,18 @@ void MainWindow::on_btnDisconnect_clicked()
 
 void MainWindow::on_pushButton_4_clicked()
 {
-    if (winOption->GetProtocolType() == SERIAL)
-    {
-        serial->SendCommand(MSP_ACC_CALIBRATION);
-        serial->SendCommand(MSP_MAG_CALIBRATION);
-    }
-    else
-    {
-        ble->SendCommand(MSP_ACC_CALIBRATION);
-        ble->SendCommand(MSP_MAG_CALIBRATION);
-    }
+    bridge->SendCommand(MSP_ACC_CALIBRATION);
+    bridge->SendCommand(MSP_MAG_CALIBRATION);
 }
 
 void MainWindow::on_pushButton_5_clicked()
 {
-    if (winOption->GetProtocolType() == SERIAL)
-    {
-        serial->SendCommand(MSP_ARM);
-    }
-    else
-    {
-        ble->SendCommand(MSP_ARM);
-    }
+    bridge->SendCommand(MSP_ARM);
 }
 
 void MainWindow::on_pushButton_6_clicked()
 {
-    if (winOption->GetProtocolType() == SERIAL)
-    {
-        serial->SendCommand(MSP_DIS_ARM);
-    }
-    else
-    {
-        ble->SendCommand(MSP_DIS_ARM);
-    }
+    bridge->SendCommand(MSP_DIS_ARM);
 }
 
 void MainWindow::on_actionDashboard_triggered()
@@ -278,12 +219,12 @@ void MainWindow::on_chkAltHold_stateChanged(int arg1)
 {
     if (arg1)
     {
-        serial->SendCommand(MSP_ALT_HOLD);
+        bridge->SendCommand(MSP_ALT_HOLD);
     }
     else
     {
         ui->chkAltHold->setText("AltHold");
-        serial->SendCommand(MSP_ALT_UNLOCK);
+        bridge->SendCommand(MSP_ALT_UNLOCK);
     }
 }
 
@@ -291,5 +232,5 @@ void MainWindow::on_horizontalSlider_sliderMoved(int position)
 {
     uint16_t p = position;
     qDebug("MSP_TEST_ALTHOLD alt: %d", p);
-    serial->SendCommand(MSP_TEST_ALTHOLD, (char *)&p, 2);
+    bridge->SendCommand(MSP_TEST_ALTHOLD, (char *)&p, 2);
 }

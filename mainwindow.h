@@ -8,6 +8,7 @@
 #include "protocol.h"
 #include "webview_bridge.h"
 #include "optiondialog.h"
+#include "connector_bridge.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -46,8 +47,8 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QLabel *lblStatus;
-    Serial *serial;
-    BLE *ble;
+    ConnectorBridge *bridge;
+
     int m_serialTimerId;
     WebviewBridge *webviewBridge;
     OptionDialog *winOption;

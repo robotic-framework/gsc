@@ -7,10 +7,23 @@
 #include <QLowEnergyController>
 #include "serializable_connector.h"
 #include "protocol.h"
+#include "connection_config.h"
 
 #define SERVICE_UUID "{0000ffe0-0000-1000-8000-00805f9b34fb}"
 #define CHAR_UUID "{0000ffe1-0000-1000-8000-00805f9b34fb}"
-#define INVALID_UUID "{00000000-0000-0000-0000-000000000000}"
+
+class BLEInfo : public ConnectionConfig {
+private:
+    QBluetoothDeviceInfo device;
+public:
+    explicit BLEInfo(const QBluetoothDeviceInfo &info) { device = info; };
+
+    QBluetoothDeviceInfo getDeviceInfo() const { return device; };
+
+    QString toString() const override {
+        return QString("%1 [%2]").arg(device.name(), device.deviceUuid().toString());
+    };
+};
 
 class BLE : public SerializableConnector {
 Q_OBJECT
@@ -21,7 +34,7 @@ private:
 public:
     static BLE *instance();
 
-    void SetCurrentDevice(const QBluetoothDeviceInfo &info) { currentDevice = info; };
+    void SetConfig(ConnectionConfig *config) final;
 
     void Scan() final;
 

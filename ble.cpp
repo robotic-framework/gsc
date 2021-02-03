@@ -35,7 +35,7 @@ void BLE::StopScan()
 }
 
 bool BLE::Connect() {
-    if (currentDevice.deviceUuid().toString() == INVALID_UUID) {
+    if (!currentDevice.isValid()) {
         return false;
     }
 
@@ -91,7 +91,7 @@ void BLE::SendCommand(uint8_t command)
 
 bool BLE::IsWritable()
 {
-    return (bleService && targetChar.uuid().toString() != INVALID_UUID);
+    return (bleService && targetChar.isValid());
 }
 
 void BLE::onNewDeviceAdd(const QBluetoothDeviceInfo &info)
@@ -212,5 +212,17 @@ void BLE::searchCharacteristic()
     if (targetChar.properties().testFlag(QLowEnergyCharacteristic::WriteNoResponse))
     {
         qDebug("can write no response");
+    }
+}
+
+void BLE::SetConfig(ConnectionConfig *config) {
+    try {
+        const auto *conf = dynamic_cast<const BLEInfo *>(config);
+        if (conf == nullptr) {
+            throw std::runtime_error("the ConnectionConfig cannot cast into QBluetoothDeviceInfo");
+        }
+        currentDevice = conf->getDeviceInfo();
+    } catch (std::exception& e) {
+        throw e;
     }
 }

@@ -10,7 +10,7 @@ class SerializableConnector : public QObject, public Connector
     Q_OBJECT
 
 public:
-    SerializableConnector(QObject *parent);
+    explicit SerializableConnector(QObject *parent = nullptr);
 
 protected:
     Serializer *serializer;

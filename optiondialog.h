@@ -6,18 +6,14 @@
 #include <QList>
 #include <QListWidgetItem>
 #include <QBluetoothDeviceInfo>
+#include "connector_bridge.h"
 #include "serial.h"
-#include "ble.h"
 #include "protocol.h"
+#include "connector_bridge.h"
 
 namespace Ui {
     class OptionDialog;
 }
-
-enum ProtocolType {
-    SERIAL,
-    BLE4
-};
 
 class OptionDialog : public QDialog {
 Q_OBJECT
@@ -62,24 +58,23 @@ private slots:
 private:
 
     Ui::OptionDialog *ui;
-    Serial *serial;
-    BLE *ble;
     QList<QBluetoothDeviceInfo> deviceList;
+    ConnectorBridge *bridge;
 
-    QBluetoothDeviceInfo bleConfig;
-    SerialInfo serialConfig;
+    QBluetoothDeviceInfo *bleConfig;
+    SerialInfo *serialConfig;
 
     ProtocolType _type = SERIAL;
 
 public:
     static OptionDialog* instance() {
-        static OptionDialog *_instance = new OptionDialog;
+        static auto *_instance = new OptionDialog;
         return _instance;
     }
 
 signals:
 
-    void connectionConfirm(const ProtocolType &ProtocolType, const SerialInfo &SerialInfo);
+    void connectionConfirm(const ProtocolType &ProtocolType, const ConnectionConfig *SerialInfo);
 };
 
 #endif // OPTIONDIALOG_H

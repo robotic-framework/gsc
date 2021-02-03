@@ -151,10 +151,18 @@ void Serial::onRead() {
     serializer->Decode(payload);
 }
 
-void Serial::SetConfig(const SerialInfo &config) {
-    setSelectedPort(config.port);
-    setSelectedBaudrate(config.rate);
-    setSelectedDatabits(config.dataBits);
-    setSelectedParity(config.parity);
-    setSelectedStopbits(config.stopBits);
+void Serial::SetConfig(ConnectionConfig *config) {
+    try {
+        const auto *serialConf = dynamic_cast<const SerialInfo *>(config);
+        if (serialConf == nullptr) {
+            throw std::runtime_error("the ConnectionConfig cannot cast into SerialInfo");
+        }
+        setSelectedPort(serialConf->port);
+        setSelectedBaudrate(serialConf->rate);
+        setSelectedDatabits(serialConf->dataBits);
+        setSelectedParity(serialConf->parity);
+        setSelectedStopbits(serialConf->stopBits);
+    } catch (std::exception& e) {
+        throw e;
+    }
 }

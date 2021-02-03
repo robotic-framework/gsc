@@ -28,6 +28,7 @@ SOURCES += \
 HEADERS += \
 #    ../PlaneDashboard/verticalprogress.h \
     ble.h \
+    connection_config.h \
     connector.h \
     connector_bridge.h \
     mainwindow.h \

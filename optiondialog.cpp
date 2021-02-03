@@ -1,34 +1,36 @@
 #include "optiondialog.h"
 #include "ui_optiondialog.h"
+#include "ble.h"
 #include <QBluetoothUuid>
 #include <QMessageBox>
 
 OptionDialog::OptionDialog(QWidget *parent) :
         QDialog(parent),
         ui(new Ui::OptionDialog),
-        _type(SERIAL) {
+        _type(SERIAL),
+        bridge(ConnectorBridge::instance()),
+        serialConfig(new SerialInfo),
+        bleConfig(new QBluetoothDeviceInfo) {
     ui->setupUi(this);
-    serial = Serial::instance();
-    connect(serial, SIGNAL(newSerialPort(QStringList)), this, SLOT(onNewSerialPort(QStringList)));
 
-    serialConfig.rate = "115200";
-    serialConfig.dataBits = "8";
-    serialConfig.parity = "None";
-    serialConfig.stopBits = "1";
-    serial->SetConfig(serialConfig);
-    ui->comboBaudrate->setCurrentText(serialConfig.rate);
-    ui->comboDatabits->setCurrentText(serialConfig.dataBits);
-    ui->comboParity->setCurrentText(serialConfig.parity);
-    ui->comboStopbits->setCurrentText(serialConfig.stopBits);
+    serialConfig->rate = "115200";
+    serialConfig->dataBits = "8";
+    serialConfig->parity = "None";
+    serialConfig->stopBits = "1";
+    ui->comboBaudrate->setCurrentText(serialConfig->rate);
+    ui->comboDatabits->setCurrentText(serialConfig->dataBits);
+    ui->comboParity->setCurrentText(serialConfig->parity);
+    ui->comboStopbits->setCurrentText(serialConfig->stopBits);
+    bridge->SetConfig(serialConfig);
 
-    serial->Scan();
-
-    ble = BLE::instance();
-    connect(ble, SIGNAL(newDeviceAdd(const QBluetoothDeviceInfo &)), this,
+    connect(bridge, SIGNAL(newSerialPort(QStringList)), this, SLOT(onNewSerialPort(QStringList)));
+    connect(bridge, SIGNAL(newDeviceInfo(const QBluetoothDeviceInfo &)), this,
             SLOT(onNewBLEDeviceAdd(const QBluetoothDeviceInfo &)));
-    connect(ble, &BLE::scanFinished, this, [this]() {
+    connect(bridge, &ConnectorBridge::scanFinished, this, [this]() {
         ui->btnRefreshBLE->setDisabled(false);
     });
+
+    bridge->Scan();
 }
 
 OptionDialog::~OptionDialog() {
@@ -37,33 +39,34 @@ OptionDialog::~OptionDialog() {
 
 void OptionDialog::on_btnConfirm_clicked() {
     if (_type == SERIAL) {
-        if (!serialConfig.port.isEmpty() &&
-            !serialConfig.rate.isEmpty() &&
-            !serialConfig.dataBits.isEmpty() &&
-            !serialConfig.parity.isEmpty() &&
-            !serialConfig.stopBits.isEmpty()) {
-            serial->SetConfig(serialConfig);
+        if (!serialConfig->port.isEmpty() &&
+            !serialConfig->rate.isEmpty() &&
+            !serialConfig->dataBits.isEmpty() &&
+            !serialConfig->parity.isEmpty() &&
+            !serialConfig->stopBits.isEmpty()) {
+            bridge->SetConfig(serialConfig);
             emit connectionConfirm(SERIAL, serialConfig);
         } else {
             QMessageBox::critical(nullptr, "未指定配置", "未选择有效的串口设备", QMessageBox::Ok);
             return;
         }
     } else {
-        if (bleConfig.isValid()) {
-            ble->SetCurrentDevice(bleConfig);
-            ble->StopScan();
-            emit connectionConfirm(BLE4, serialConfig);
+        if (bleConfig->isValid()) {
+            auto conf = new BLEInfo(*bleConfig);
+            bridge->SetConfig(conf);
+            emit connectionConfirm(BLE4, conf);
         } else {
             QMessageBox::critical(nullptr, "未指定配置", "未选择需要连接的蓝牙设备", QMessageBox::Ok);
             return;
         }
     }
 
+    bridge->StopScan();
     hide();
 }
 
 void OptionDialog::on_btnCancel_clicked() {
-    ble->StopScan();
+    bridge->StopScan();
     hide();
 }
 
@@ -71,8 +74,8 @@ void OptionDialog::onNewSerialPort(QStringList ports) {
     ui->comboPorts->clear();
     ui->comboPorts->addItems(ports);
 
-    if (serialConfig.port.isEmpty()) {
-        serialConfig.port = ports.constFirst();
+    if (serialConfig->port.isEmpty()) {
+        serialConfig->port = ports.constFirst();
         ui->comboPorts->setCurrentText(ports.constFirst());
     }
 }
@@ -91,33 +94,33 @@ void OptionDialog::onNewBLEDeviceAdd(const QBluetoothDeviceInfo &info) {
 }
 
 void OptionDialog::on_btnRefresh_clicked() {
-    serial->Scan();
+    Serial::instance()->Scan();
 }
 
 void OptionDialog::on_comboPorts_activated(const QString &arg1) {
-    serialConfig.port = arg1;
+    serialConfig->port = arg1;
 }
 
 void OptionDialog::on_comboBaudrate_activated(const QString &arg1) {
-    serialConfig.rate = arg1;
+    serialConfig->rate = arg1;
 }
 
 void OptionDialog::on_comboDatabits_activated(const QString &arg1) {
-    serialConfig.dataBits = arg1;
+    serialConfig->dataBits = arg1;
 }
 
 void OptionDialog::on_comboStopbits_activated(const QString &arg1) {
-    serialConfig.stopBits = arg1;
+    serialConfig->stopBits = arg1;
 }
 
 void OptionDialog::on_comboParity_activated(const QString &arg1) {
-    serialConfig.parity = arg1;
+    serialConfig->parity = arg1;
 }
 
 void OptionDialog::on_btnRefreshBLE_clicked() {
     ui->listBLE->clear();
     ui->btnRefreshBLE->setDisabled(true);
-    ble->Scan();
+    BLE::instance()->Scan();
 }
 
 
@@ -130,7 +133,7 @@ void OptionDialog::on_listBLE_itemClicked(QListWidgetItem *item) {
 
         for (int i = 0; i < deviceList.count(); i++) {
             if (deviceList[i].deviceUuid().toString() == tmp[1]) {
-                bleConfig = deviceList[i];
+                bleConfig = &deviceList[i];
                 break;
             }
         }

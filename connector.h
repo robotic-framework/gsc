@@ -2,6 +2,7 @@
 #define CONNECTOR_H
 
 #include "stdint.h"
+#include "connection_config.h"
 
 class Connector {
 
@@ -10,6 +11,8 @@ public:
     virtual void Scan() = 0;
 
     virtual void StopScan() = 0;
+
+    virtual void SetConfig(ConnectionConfig *config) = 0;
 
     virtual bool Connect() = 0;
 
