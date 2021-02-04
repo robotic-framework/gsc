@@ -3,8 +3,6 @@
 
 #include <QMainWindow>
 #include <QScrollBar>
-#include "ble.h"
-#include "serial.h"
 #include "protocol.h"
 #include "webview_bridge.h"
 #include "optiondialog.h"
@@ -21,10 +19,6 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
-    void SetStatusText(const QString &val) {
-        lblStatus->setText(val);
-    };
 
 protected:
     void timerEvent( QTimerEvent *event );

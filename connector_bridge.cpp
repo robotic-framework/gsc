@@ -17,11 +17,9 @@ ConnectorBridge::ConnectorBridge(QObject *parent) : QObject(parent),
     auto ble = BLE::instance();
     connectors.insert(BLE4, BLE::instance());
     connect(ble, &BLE::newDeviceAdd, this, [this](const QBluetoothDeviceInfo &device) {
-        qDebug(device.deviceUuid().toString().toStdString().c_str());
         emit newDeviceInfo(device);
     });
     connect(ble, &BLE::scanFinished, this, [this]() {
-        qDebug("finished");
         emit scanFinished();
     });
     connect(ble, &Serial::newResponse, this, [this](uint8_t command, const char* payload, uint8_t s) {
