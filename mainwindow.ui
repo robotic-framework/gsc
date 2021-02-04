@@ -662,6 +662,106 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="page">
+       <layout class="QVBoxLayout" name="verticalLayout_7" stretch="10,1">
+        <item>
+         <widget class="QTableWidget" name="tblPID">
+          <attribute name="horizontalHeaderMinimumSectionSize">
+           <number>15</number>
+          </attribute>
+          <attribute name="horizontalHeaderDefaultSectionSize">
+           <number>200</number>
+          </attribute>
+          <attribute name="verticalHeaderDefaultSectionSize">
+           <number>40</number>
+          </attribute>
+          <row>
+           <property name="text">
+            <string>Roll</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>Pitch</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>Yaw</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>AltHold</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>PosHold</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>PosR</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>NavR</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>Level</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>Mag</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>Vel</string>
+           </property>
+          </row>
+          <column>
+           <property name="text">
+            <string>P</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>I</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>D</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_6">
+          <item>
+           <widget class="QPushButton" name="btnReadConfig">
+            <property name="text">
+             <string>读取配置</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnWriteConfig">
+            <property name="text">
+             <string>写入配置</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
       <widget class="QWidget" name="page2">
        <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="8,2">
         <item>
@@ -753,6 +853,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionDashboard"/>
+   <addaction name="actionTunning"/>
    <addaction name="actionPlanner"/>
   </widget>
   <action name="actionDashboard">
@@ -766,6 +867,11 @@
    </property>
    <property name="toolTip">
     <string>Planner</string>
+   </property>
+  </action>
+  <action name="actionTunning">
+   <property name="text">
+    <string>Tunning</string>
    </property>
   </action>
  </widget>

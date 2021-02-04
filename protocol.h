@@ -71,12 +71,10 @@
 #define MSP_DEBUGMSG 253 //out message         debug string buffer
 #define MSP_DEBUG 254    //out message         debug1,debug2,debug3,debug4
 
-
 #define INPUT_BUFFER_SIZE 64
 #define TX_BUFFER_SIZE 128
 
-enum MSP_protocol_states
-{
+enum MSP_protocol_states {
     IDLE,
     HEADER_START,
     HEADER_M,
@@ -85,56 +83,91 @@ enum MSP_protocol_states
     HEADER_CMD
 };
 
-struct StatusResponse
+enum PIDType
 {
+    PIDROLL,
+    PIDPITCH,
+    PIDYAW,
+    PIDALT,
+    PIDPOS,
+    PIDPOSR,
+    PIDNAVR,
+    PIDLEVEL,
+    PIDMAG,
+    PIDVEL, // not used currently
+    PIDITEMS
+};
+
+struct StatusResponse {
     uint16_t CycleTime, I2CErrorCount;
     bool SensorAcc, SensorGyro, SensorMag, SensorBaro, SensorSonar, SensorGPS;
     uint32_t Flag;
     uint8_t Set;
-    void Unmarshel(const char *payload, uint8_t size);
+
+    void Unmarshal(const char *payload, uint8_t size);
 };
 
-struct RawIMUResponse
-{
+struct RawIMUResponse {
     int16_t Acc[3];
     int16_t Gyro[3];
     int16_t Mag[3];
-    void Unmarshel(const char *payload, uint8_t size);
+
+    void Unmarshal(const char *payload, uint8_t size);
 };
 
-struct RawBaroResponse
-{
+struct RawBaroResponse {
     int16_t CT;
     int32_t CP;
-    void Unmarshel(const char *payload, uint8_t size);
+
+    void Unmarshal(const char *payload, uint8_t size);
 };
 
-struct AttitudeResponse
-{
+struct AttitudeResponse {
     int16_t AngleX;
     int16_t AngleY;
     int16_t Heading;
-    void Unmarshel(const char *payload, uint8_t size);
+
+    void Unmarshal(const char *payload, uint8_t size);
 
 };
 
-struct AltitudeResponse
-{
+struct AltitudeResponse {
     int32_t Alt;
     int16_t Vario;
-    void Unmarshel(const char *payload, uint8_t size);
+
+    void Unmarshal(const char *payload, uint8_t size);
 };
 
-struct MotorResponse
-{
+struct MotorResponse {
     int16_t Motors[8];
-    void Unmarshel(const char *payload, uint8_t size);
+
+    void Unmarshal(const char *payload, uint8_t size);
 };
 
-int32_t UnmarshelAltHold(const char *payload);
+struct PID
+{
+    uint8_t P;
+    uint8_t I;
+    uint8_t D;
+
+    void Unmarshal(const char *payload, uint8_t size);
+};
+
+struct PIDResponse {
+    union {
+        PID pid[PIDITEMS];
+        uint8_t pidA[PIDITEMS][3];
+    };
+
+    void Unmarshal(const char *payload, uint8_t size);
+};
+
+int32_t UnmarshalAltHold(const char *payload);
 
 static uint8_t read8(const char *payload);
+
 static uint16_t read16(const char *payload);
+
 static uint32_t read32(const char *payload);
 
 #endif // PROTOCOL_H

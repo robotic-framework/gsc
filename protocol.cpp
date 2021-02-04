@@ -1,30 +1,25 @@
 #include "protocol.h"
 
-static uint8_t read8(const char *payload)
-{
+static uint8_t read8(const char *payload) {
     return *payload;
 }
 
-static uint16_t read16(const char *payload)
-{
+static uint16_t read16(const char *payload) {
     uint16_t c = read8(payload);
     payload++;
-    c += (uint16_t)read8(payload) << 8;
+    c += (uint16_t) read8(payload) << 8;
     return c;
 }
 
-static uint32_t read32(const char *payload)
-{
+static uint32_t read32(const char *payload) {
     uint32_t c = read16(payload);
-    payload+=2;
-    c += (uint32_t)read16(payload) << 16;
+    payload += 2;
+    c += (uint32_t) read16(payload) << 16;
     return c;
 }
 
-void StatusResponse::Unmarshel(const char *payload, uint8_t size)
-{
-    if (size < 11)
-    {
+void StatusResponse::Unmarshal(const char *payload, uint8_t size) {
+    if (size < 11) {
         return;
     }
 
@@ -49,34 +44,27 @@ void StatusResponse::Unmarshel(const char *payload, uint8_t size)
     Set = read8(payload);
 }
 
-void RawIMUResponse::Unmarshel(const char *payload, uint8_t size)
-{
-    if (size < 18)
-    {
+void RawIMUResponse::Unmarshal(const char *payload, uint8_t size) {
+    if (size < 18) {
         return;
     }
 
-    for (int i = 0; i < 6; i += 2)
-    {
-        Acc[i/2] = read16(payload);
+    for (int i = 0; i < 6; i += 2) {
+        Acc[i / 2] = read16(payload);
         payload += 2;
     }
-    for (int i = 0; i < 6; i += 2)
-    {
-        Gyro[i/2] = read16(payload);
+    for (int i = 0; i < 6; i += 2) {
+        Gyro[i / 2] = read16(payload);
         payload += 2;
     }
-    for (int i = 0; i < 6; i += 2)
-    {
-        Mag[i/2] = read16(payload);
+    for (int i = 0; i < 6; i += 2) {
+        Mag[i / 2] = read16(payload);
         payload += 2;
     }
 }
 
-void RawBaroResponse::Unmarshel(const char *payload, uint8_t size)
-{
-    if (size < 6)
-    {
+void RawBaroResponse::Unmarshal(const char *payload, uint8_t size) {
+    if (size < 6) {
         return;
     }
 
@@ -85,10 +73,8 @@ void RawBaroResponse::Unmarshel(const char *payload, uint8_t size)
     CP = read32(payload);
 }
 
-void AttitudeResponse::Unmarshel(const char *payload, uint8_t size)
-{
-    if (size < 6)
-    {
+void AttitudeResponse::Unmarshal(const char *payload, uint8_t size) {
+    if (size < 6) {
         return;
     }
 
@@ -101,10 +87,8 @@ void AttitudeResponse::Unmarshel(const char *payload, uint8_t size)
     Heading = read16(payload);
 }
 
-void AltitudeResponse::Unmarshel(const char *payload, uint8_t size)
-{
-    if (size < 6)
-    {
+void AltitudeResponse::Unmarshal(const char *payload, uint8_t size) {
+    if (size < 6) {
         return;
     }
 
@@ -113,21 +97,30 @@ void AltitudeResponse::Unmarshel(const char *payload, uint8_t size)
     Vario = read16(payload);
 }
 
-void MotorResponse::Unmarshel(const char *payload, uint8_t size)
-{
-    if (size < 16)
-    {
+void MotorResponse::Unmarshal(const char *payload, uint8_t size) {
+    if (size < 16) {
         return;
     }
 
-    for (int i = 0; i < size; i += 2)
-    {
-        Motors[i/2] = read16(payload);
+    for (int i = 0; i < size; i += 2) {
+        Motors[i / 2] = read16(payload);
         payload += 2;
     }
 }
 
-int32_t UnmarshelAltHold(const char *payload)
-{
+int32_t UnmarshalAltHold(const char *payload) {
     return read32(payload);
+}
+
+void PID::Unmarshal(const char *payload, uint8_t size) {
+    P = read8(payload++);
+    I = read8(payload++);
+    D = read8(payload);
+}
+
+void PIDResponse::Unmarshal(const char *payload, uint8_t size) {
+    for (int i = 0; i < size / 3; ++i) {
+        pid[i].Unmarshal(payload, 3);
+        payload += 3;
+    }
 }

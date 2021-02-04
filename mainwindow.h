@@ -38,6 +38,14 @@ private slots:
     void on_chkAltHold_stateChanged(int arg1);
     void on_horizontalSlider_sliderMoved(int position);
 
+    void on_actionTunning_triggered();
+
+    void on_btnReadConfig_clicked();
+
+    void on_tblPID_cellChanged(int row, int column);
+
+    void on_btnWriteConfig_clicked();
+
 private:
     Ui::MainWindow *ui;
     QLabel *lblStatus;
@@ -46,5 +54,13 @@ private:
     int m_serialTimerId;
     WebviewBridge *webviewBridge;
     OptionDialog *winOption;
+
+    enum CellType {
+        ctP = 1000,
+        ctI,
+        ctD
+    };
+
+    PIDResponse pidConfig;
 };
 #endif // MAINWINDOW_H
