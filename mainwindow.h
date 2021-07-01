@@ -22,6 +22,8 @@ public:
 
 protected:
     void timerEvent( QTimerEvent *event );
+    void keyPressEvent(QKeyEvent *evt);
+    void keyReleaseEvent(QKeyEvent *evt);
 
 private slots:
     void onNewSerialResponse(uint8_t command, const char *payload, uint8_t s);
@@ -46,6 +48,20 @@ private slots:
 
     void on_btnWriteConfig_clicked();
 
+    void on_pitchSlider_sliderMoved(int position);
+
+    void on_pitchSlider_sliderReleased();
+
+    void on_throttleSlider_sliderMoved(int position);
+
+    void on_rollSlider_sliderMoved(int position);
+
+    void on_rollSlider_sliderReleased();
+
+    void on_yawSlider_sliderMoved(int position);
+
+    void on_yawSlider_sliderReleased();
+
 private:
     Ui::MainWindow *ui;
     QLabel *lblStatus;
@@ -54,6 +70,9 @@ private:
     int m_serialTimerId;
     WebviewBridge *webviewBridge;
     OptionDialog *winOption;
+
+    int16_t rcCommand[4] = {0, 0, 0, 1150};
+    bool keyWPressed = false, keySPressed = false, keyAPressed = false, keyDPressed = false, keyUpPressed = false, keyDownPressed = false, keyLeftPressed = false, keyRightPressed = false;
 
     enum CellType {
         ctP = 1000,

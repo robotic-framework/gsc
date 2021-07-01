@@ -64,6 +64,50 @@ void MainWindow::timerEvent(QTimerEvent *event) {
     ui->dashboardPFD->update();
     ui->dashboardHSI->update();
     ui->dashboardNAV->update();
+
+    if (keyWPressed) {
+        ui->pitchSlider->setValue(ui->pitchSlider->value() + 5);
+    }
+    if (keySPressed) {
+        ui->pitchSlider->setValue(ui->pitchSlider->value() - 5);
+    }
+    if (!keyWPressed && !keySPressed) {
+        ui->pitchSlider->setValue(0);
+    }
+    rcCommand[1] = ui->pitchSlider->value();
+
+    if (keyAPressed) {
+        ui->rollSlider->setValue(ui->rollSlider->value() - 5);
+    }
+    if (keyDPressed) {
+        ui->rollSlider->setValue(ui->rollSlider->value() + 5);
+    }
+    if (!keyAPressed && !keyDPressed) {
+        ui->rollSlider->setValue(0);
+    }
+    rcCommand[0] = ui->rollSlider->value();
+
+    if (keyUpPressed) {
+        ui->throttleSlider->setValue(ui->throttleSlider->value() + 50);
+    }
+    if (keyDownPressed) {
+        ui->throttleSlider->setValue(ui->throttleSlider->value() - 50);
+    }
+    rcCommand[3] = ui->throttleSlider->value();
+
+    if (keyLeftPressed) {
+        ui->yawSlider->setValue(ui->yawSlider->value() - 5);
+    }
+    if (keyRightPressed) {
+        ui->yawSlider->setValue(ui->yawSlider->value() + 5);
+    }
+    if (!keyLeftPressed && !keyRightPressed) {
+        ui->yawSlider->setValue(0);
+    }
+    rcCommand[2] = ui->yawSlider->value();
+
+    qDebug("MSP_TEST_RCCOMMAND command: roll=%d, pitch=%d, yaw=%d, throttle=%d", rcCommand[0], rcCommand[1], rcCommand[2], rcCommand[3]);
+    bridge->SendCommand(MSP_TEST_RCCOMMAND, (char *)rcCommand, 8);
 }
 
 void MainWindow::onNewSerialResponse(uint8_t command, const char *payload, uint8_t s) {
@@ -183,7 +227,7 @@ void MainWindow::on_btnConnect_clicked() {
     } else {
         ui->statusbar->showMessage("连接失败", 2000);
     }
-    m_serialTimerId = startTimer(50);
+    m_serialTimerId = startTimer(100);
 }
 
 void MainWindow::on_btnDisconnect_clicked() {
@@ -262,4 +306,124 @@ void MainWindow::on_tblPID_cellChanged(int row, int column) {
 
 void MainWindow::on_btnWriteConfig_clicked() {
     bridge->SendCommand(MSP_SET_PID, (char *) pidConfig.pid, 3 * PIDITEMS);
+}
+
+
+void MainWindow::on_pitchSlider_sliderMoved(int position)
+{
+
+}
+
+
+void MainWindow::on_pitchSlider_sliderReleased()
+{
+    ui->pitchSlider->setValue(0);
+}
+
+
+void MainWindow::on_throttleSlider_sliderMoved(int position)
+{
+
+}
+
+
+void MainWindow::on_rollSlider_sliderMoved(int position)
+{
+
+}
+
+
+void MainWindow::on_rollSlider_sliderReleased()
+{
+
+}
+
+
+void MainWindow::on_yawSlider_sliderMoved(int position)
+{
+
+}
+
+
+void MainWindow::on_yawSlider_sliderReleased()
+{
+
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *evt)
+{
+    switch(evt->key())
+    {
+    case Qt::Key_W: {
+        keyWPressed = true;
+        break;
+    }
+    case Qt::Key_S: {
+        keySPressed = true;
+        break;
+    }
+    case Qt::Key_A: {
+        keyAPressed = true;
+        break;
+    }
+    case Qt::Key_D: {
+        keyDPressed = true;
+        break;
+    }
+    case Qt::Key_I: {
+        keyUpPressed = true;
+        break;
+    }
+    case Qt::Key_K: {
+        keyDownPressed = true;
+        break;
+    }
+    case Qt::Key_J: {
+        keyLeftPressed = true;
+        break;
+    }
+    case Qt::Key_L: {
+        keyRightPressed = true;
+        break;
+    }
+    }
+}
+
+void MainWindow::keyReleaseEvent(QKeyEvent *evt)
+{
+    switch(evt->key())
+    {
+    case Qt::Key_W: {
+        keyWPressed = false;
+        break;
+    }
+    case Qt::Key_S: {
+        keySPressed = false;
+        break;
+    }
+    case Qt::Key_A: {
+        keyAPressed = false;
+        break;
+    }
+    case Qt::Key_D: {
+        keyDPressed = false;
+        break;
+    }
+    case Qt::Key_I: {
+        keyUpPressed = false;
+        break;
+    }
+    case Qt::Key_K: {
+        keyDownPressed = false;
+        break;
+    }
+    case Qt::Key_J: {
+        keyLeftPressed = false;
+        break;
+    }
+    case Qt::Key_L: {
+        keyRightPressed = false;
+        break;
+    }
+    }
 }

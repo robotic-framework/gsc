@@ -135,9 +135,13 @@ void Serial::SendCommand(uint8_t command, const char *payload, uint8_t s) {
     if (!isWritable) {
         return;
     }
-    char *result = nullptr;
     uint8_t size = 0;
-    result = serializer->Serialize(command, payload, s, &size);
+    char *result = serializer->Serialize(command, payload, s, &size);
+
+    if (command == MSP_TEST_RCCOMMAND) {
+        QByteArray str = QByteArray::fromRawData(result, size);
+        qDebug("[COMMAND] %d: %s", command, str.toHex(' ').toStdString().c_str());
+    }
 
     io->write(result, size);
 }
